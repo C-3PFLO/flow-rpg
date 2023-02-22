@@ -4,8 +4,8 @@
     "description": "RPG your NFT",
     "main": "index.js",
     "scripts": {
-        "build": "babel src -d build",
-        "check": "eslint src test",
+        "build": "babel web -d build",
+        "check": "eslint web test",
         "test": "jest",
         "test:watch": "jest --watch"
     },

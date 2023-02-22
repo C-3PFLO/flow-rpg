@@ -1,4 +1,4 @@
-import { sayHello } from '../../src/web/index.js';
+import { sayHello } from '../../web/index.js';
 
 describe('index', () => {
     it('sayHello', () => {

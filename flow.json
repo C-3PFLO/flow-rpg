@@ -1,21 +1,37 @@
 {
-    "emulators": {
-        "default": {
-            "port": 3569,
-            "serviceAccount": "emulator-account"
-        }
-    },
-    "contracts": {},
-    "networks": {
-        "emulator": "127.0.0.1:3569",
-        "mainnet": "access.mainnet.nodes.onflow.org:9000",
-        "testnet": "access.devnet.nodes.onflow.org:9000"
-    },
-    "accounts": {
-        "emulator-account": {
-            "address": "f8d6e0586b0a20c7",
-            "key": "8e3983030d2af1fa01c078241ad7f699d492e0239247f38d5a96cb959e436531"
-        }
-    },
-    "deployments": {}
+	"contracts": {
+		"MyExampleNFT": "cadence/contracts/MyExampleNFT.cdc",
+		"NonFungibleToken": "cadence/contracts/NonFungibleToken.cdc"
+	},
+	"networks": {
+		"emulator": "127.0.0.1:3569",
+		"testnet": "access.devnet.nodes.onflow.org:9000"
+	},
+	"accounts": {
+		"default": {
+			"address": "f3fcd2c1a78f5eee",
+			"key": "f014f389439c97531cc409ef8ef09474969a9021795f4da7926b189fe1b2a0e5"
+		},
+		"emulator-account": {
+			"address": "f8d6e0586b0a20c7",
+			"key": "8e3983030d2af1fa01c078241ad7f699d492e0239247f38d5a96cb959e436531"
+		},
+		"flow-rpg-testnet": {
+			"fromFile": "flow-rpg-testnet.private.json"
+		}
+	},
+	"deployments": {
+		"emulator": {
+			"default": [
+				"MyExampleNFT",
+				"NonFungibleToken"
+			]
+		},
+		"testnet": {
+			"flow-rpg-testnet": [
+				"MyExampleNFT",
+				"NonFungibleToken"
+			]
+		}
+	}
 }
