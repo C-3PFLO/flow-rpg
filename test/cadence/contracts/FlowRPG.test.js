@@ -4,6 +4,7 @@ import {
 
 import {
     safeExecuteScript,
+    safeSendTransaction,
 } from '../../common';
 
 describe('cadence/contracts/FlowRPG', () => {
@@ -11,14 +12,16 @@ describe('cadence/contracts/FlowRPG', () => {
     beforeEach(async () => {
         admin = await getAccountAddress('admin');
     });
-    it('sayHello', async () => {
-        const code = `
-            import FlowRPG from ${admin}
-            pub fun main(): String {
-                return FlowRPG.sayHello()
-            }
-        `;
-        const [result] = await safeExecuteScript({ code });
-        expect(result).toEqual('Hello world!');
+    it('nominal', async () => {
+        await safeSendTransaction({
+            name: 'attach',
+            args: ['my-nft'],
+            signers: [admin],
+        });
+        const [result] = await safeExecuteScript({
+            name: 'get_collection',
+            args: [admin],
+        });
+        expect(result).toEqual('my-nft');
     });
 });
