@@ -28,6 +28,7 @@ jobs:
     #   uses: Homebrew/actions/setup-homebrew@master
     # - run: brew install flow-cli
     - run: sh -ci "$(curl -fsSL https://raw.githubusercontent.com/onflow/flow-cli/master/install.sh)" -- v0.45.1-cadence-attachments-3
+    - run: flow version
     # END HACK
 
     - run: npm ci
