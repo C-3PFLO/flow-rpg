@@ -15,10 +15,10 @@ beforeEach(async () => {
     await init(basePath);
     await emulator.start();
     // Deploy
-    const admin = await getAccountAddress('admin');
-    await safeDeployContractByName({ to: admin, name: 'NonFungibleToken' });
-    await safeDeployContractByName({ to: admin, name: 'FlowRPG' });
-    await safeDeployContractByName({ to: admin, name: 'MyExampleNFT' });
+    // const admin = await getAccountAddress('admin');
+    // await safeDeployContractByName({ to: admin, name: 'NonFungibleToken' });
+    // await safeDeployContractByName({ to: admin, name: 'FlowRPG' });
+    // await safeDeployContractByName({ to: admin, name: 'MyExampleNFT' });
 });
 
 // Stop emulator, so it could be restarted
