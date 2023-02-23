@@ -92,7 +92,7 @@ pub contract MyExampleNFT: NonFungibleToken {
         self.CollectionPublicPath = /public/myExampleNFTCollectionV1
         self.MinterStoragePath = /storage/myExampleNFTMinterV1
 
-        emit ContractInitialized()
         self.account.save(<- create Minter(), to: self.MinterStoragePath)
+        emit ContractInitialized()
     }
 }

@@ -93,7 +93,7 @@ pub contract interface NonFungibleToken {
     // Interface to mediate deposits to the Collection
     //
     pub resource interface Receiver {
-			pub fun deposit(token: @NFT)
+        pub fun deposit(token: @NFT)
     }
 
     // Interface that an account would commonly 

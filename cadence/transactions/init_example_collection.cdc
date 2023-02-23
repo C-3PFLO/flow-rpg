@@ -7,7 +7,7 @@ transaction() {
             <- MyExampleNFT.createEmptyCollection(),
             to: MyExampleNFT.CollectionStoragePath
         )
-        signer.link<&MyExampleNFT.Collection{NonFungibleToken.CollectionPublic, MyExampleNFT.CollectionPublic}>(
+        signer.link<&MyExampleNFT.Collection{NonFungibleToken.CollectionPublic, NonFungibleToken.Receiver, MyExampleNFT.CollectionPublic}>(
             MyExampleNFT.CollectionPublicPath,
             target: MyExampleNFT.CollectionStoragePath
         )
