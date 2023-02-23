@@ -21,10 +21,15 @@ jobs:
         cache: 'npm'
 
     # Install dependencies
-    - name: Set up Homebrew
-      id: set-up-homebrew
-      uses: Homebrew/actions/setup-homebrew@master
-    - run: brew install flow-cli
+
+    # HACK: need a specific version while using experimental branch, not available via homebrew
+    # - name: Set up Homebrew
+    #   id: set-up-homebrew
+    #   uses: Homebrew/actions/setup-homebrew@master
+    # - run: brew install flow-cli
+    - run: sh -ci "$(curl -fsSL https://raw.githubusercontent.com/onflow/flow-cli/master/install.sh)" -- v0.45.1-cadence-attachments-3
+    # END HACK
+
     - run: npm ci
     
     # Build
