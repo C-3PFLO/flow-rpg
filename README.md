@@ -1,5 +1,7 @@
 # flow-rpg
 
-RPG your NFT with
+Use
 
-`attachment FlowRPG for NonFungibleToken.NFT`
+`attachment RPGCharacter for NonFungibleToken`
+
+to RPG your NFT &trade;
