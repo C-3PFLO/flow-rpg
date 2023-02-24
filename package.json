@@ -4,10 +4,12 @@
     "description": "RPG your NFT",
     "main": "index.js",
     "scripts": {
-        "build": "babel web -d build",
-        "check": "eslint web test",
+        "build": "npx webpack",
+        "build:watch": "npx webpack --watch",
+        "check": "eslint src test",
         "test": "jest",
-        "test:watch": "jest --watch"
+        "test:watch": "jest --coverage --watch",
+        "start": "npx webpack serve"
     },
     "repository": {
         "type": "git",
@@ -20,17 +22,34 @@
     },
     "homepage": "https://github.com/C-3PFLO/flow-rpg#readme",
     "devDependencies": {
+        "@babel/cli": "^7.13.14",
+        "@babel/core": "^7.9.0",
+        "@babel/preset-env": "^7.9.5",
+        "@babel/preset-react": "^7.16.7",
         "@onflow/flow-js-testing": "^0.3.0-alpha.17",
         "babel-jest": "^29.4.2",
+        "babel-loader": "^8.2.3",
+        "copy-webpack-plugin": "^8.1.1",
+        "css-loader": "^6.6.0",
         "eslint": "^8.33.0",
         "eslint-config-google": "^0.14.0",
         "eslint-plugin-jest": "^27.2.1",
+        "eslint-plugin-react": "^7.28.0",
         "jest": "^29.4.2",
-        "path": "^0.12.7"
+        "jest-environment-jsdom": "^29.4.3",
+        "jest-junit": "^13.0.0",
+        "path": "^0.12.7",
+        "style-loader": "^3.3.1",
+        "webpack": "^5.33.2",
+        "webpack-cli": "^4.6.0",
+        "webpack-dev-server": "^4.7.3"
     },
     "dependencies": {
-        "@babel/cli": "^7.20.7",
-        "@babel/core": "^7.20.12",
-        "@babel/preset-env": "^7.20.2"
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
+        "react-redux": "^7.2.6",
+        "redux": "^4.0.5",
+        "redux-promise-middleware": "^6.1.2",
+        "redux-thunk": "^2.3.0"
     }
 }
