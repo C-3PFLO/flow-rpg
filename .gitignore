@@ -1,6 +1,6 @@
 *.code-workspace
 node_modules
 artifacts
-build
+dist
 
 *.private.json

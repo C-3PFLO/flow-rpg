@@ -1,13 +1,16 @@
 {
     "env": {
+        "browser": true,
         "es6": true,
         "jest/globals": true
     },
     "plugins": [
-        "jest"
+        "jest",
+        "react"
     ],
     "extends": [
         "eslint:recommended",
+        "plugin:react/recommended",
         "google"
     ],
     "globals": {
@@ -16,7 +19,11 @@
     },
     "parserOptions": {
         "ecmaVersion": 2018,
-        "sourceType": "module"
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true,
+            "modules": true
+        }
     },
     "rules": {
         "indent": ["warn", 4],
@@ -24,5 +31,10 @@
         "object-curly-spacing": ["warn", "always"],
         "block-spacing": ["warn", "always"],
         "max-len": ["warn", { "ignoreComments": true, "ignoreStrings": true }],
+    },
+    "settings": {
+        "react": {
+            "version": "17.0.2"
+        }
     }
 }
