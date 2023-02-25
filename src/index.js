@@ -25,8 +25,7 @@ ReactDOM.render(
     <Provider store={store.getStore()}>
         <App />
         <button onClick={() => store.getStore().dispatch(collection.init())}
-        >Init Colection</button>
+        >Init Collection</button>
     </Provider>,
     rootElement,
 );
- 

@@ -9,7 +9,6 @@
         "check": "eslint src test",
         "test": "jest",
         "test:watch": "jest --coverage --watch",
-        "hydrate": "babel src -d dist; node dist/hydrate.js",
         "start:flow-emulator": "flow emulator start -v",
         "start:flow-dev": "wait-on tcp:8080 && flow dev",
         "start:flow-dev-wallet": "wait-on tcp:8080 && flow dev-wallet",

@@ -29,4 +29,3 @@ export function initCollection() {
         return fcl.tx(id).onceSealed();
     });
 }
- 
