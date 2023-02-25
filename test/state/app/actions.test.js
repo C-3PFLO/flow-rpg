@@ -5,7 +5,7 @@ import * as fcl from '@onflow/fcl';
 jest.mock('@onflow/fcl');
 
 describe('state/app/actions', () => {
-    describe('init', () => {
+    describe('initApp', () => {
         beforeEach(() => {
             fcl.currentUser.snapshot(() => {});
         });
@@ -13,7 +13,7 @@ describe('state/app/actions', () => {
             jest.clearAllMocks();
         });
         it('nominal', () => {
-            const action = actions.init();
+            const action = actions.initApp();
             expect(action.type).toEqual(ActionTypes.INIT_APP);
             expect(fcl.currentUser.snapshot).toHaveBeenCalled();
         });

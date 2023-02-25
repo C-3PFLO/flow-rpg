@@ -8,6 +8,9 @@ import ActionTypes from './action-types.js';
 
 import * as fcl from '@onflow/fcl';
 
+import * as scripts from '../fcl/scripts';
+import * as transactions from '../fcl/transactions';
+
 /**
  * @public
  * @return {Promise}
@@ -31,7 +34,7 @@ function _loginAndWait() {
  * @public
  * @return {Object} action
  */
-export function init() {
+export function initApp() {
     return {
         type: ActionTypes.INIT_APP,
         payload: fcl.currentUser.snapshot(),
@@ -59,5 +62,28 @@ export function logout() {
     fcl.unauthenticate();
     return {
         type: ActionTypes.LOGOUT,
+    };
+}
+
+/**
+ * @public
+ * @param {String} address
+ * @return {Object} action
+ */
+export function checkCollection(address) {
+    return {
+        type: ActionTypes.CHECK_COLLECTION,
+        payload: scripts.checkCollection(address),
+    };
+}
+
+/**
+ * @public
+ * @return {Object} action
+ */
+export function initCollection() {
+    return {
+        type: ActionTypes.INIT_COLLECTION,
+        payload: transactions.initCollection(),
     };
 }

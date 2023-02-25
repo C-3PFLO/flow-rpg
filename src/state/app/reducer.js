@@ -17,6 +17,7 @@ const ErrorCodes = {
 
 const initialState = {
     currentUser: {},
+    hasCollection: false,
     persistence: {
         initialized: false,
         pending: false,
@@ -62,8 +63,28 @@ function reduce(state, action) {
     case ActionTypes.LOGOUT:
         newState = utils.deepCopy(initialState); // reset to initial
         break;
+    case ActionTypes.CHECK_COLLECTION + AsyncStatus.PENDING:
+        newState = utils.deepCopy(state); // reset to initial
+        newState.persistence.pending = true;
+        break;
+    case ActionTypes.CHECK_COLLECTION + AsyncStatus.SUCCESS:
+        newState = utils.deepCopy(state);
+        newState.persistence.pending = false;
+        newState.hasCollection = action.payload;
+        break;
+    case ActionTypes.INIT_COLLECTION + AsyncStatus.PENDING:
+        newState = utils.deepCopy(state);
+        newState.persistence.pending = true;
+        break;
+    case ActionTypes.INIT_COLLECTION + AsyncStatus.SUCCESS:
+        newState = utils.deepCopy(state);
+        newState.persistence.pending = false;
+        newState.hasCollection = true;
+        break;
     case ActionTypes.INIT_APP + AsyncStatus.FAILURE:
     case ActionTypes.LOGIN + AsyncStatus.FAILURE:
+    case ActionTypes.CHECK_COLLECTION + AsyncStatus.FAILURE:
+    case ActionTypes.INIT_COLLECTION + AsyncStatus.FAILURE:
         newState = utils.deepCopy(state);
         newState.persistence.pending = false;
         newState.persistence.error = action.payload;
