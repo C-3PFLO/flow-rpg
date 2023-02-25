@@ -3,5 +3,6 @@ node_modules
 artifacts
 dist
 flowdb
+junit.xml
 
 *.private.json

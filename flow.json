@@ -6,19 +6,18 @@
 	},
 	"networks": {
 		"emulator": "127.0.0.1:3569",
+		"mainnet": "access.mainnet.nodes.onflow.org:9000",
+		"sandboxnet": "access.sandboxnet.nodes.onflow.org:9000",
 		"testnet": "access.devnet.nodes.onflow.org:9000"
 	},
 	"accounts": {
 		"default": {
-			"address": "f3fcd2c1a78f5eee",
-			"key": "daac59a6c048f042d96af3e384acb31ffb2e0c35dbdd7f19488b45e76e433097"
+			"address": "f669cb8d41ce0c74",
+			"key": "d928dedb74a7b3c2e05fffc657acf902d70b7ac7c71f9c130d86a040e74c4d43"
 		},
 		"emulator-account": {
 			"address": "f8d6e0586b0a20c7",
-			"key": "8e3983030d2af1fa01c078241ad7f699d492e0239247f38d5a96cb959e436531"
-		},
-		"flow-rpg-testnet": {
-			"fromFile": "flow-rpg-testnet.private.json"
+			"key": "97969edac82dd2ed57f1c2cbe310fb26418ed4c8f907b67261e44da639c4bee9"
 		}
 	},
 	"deployments": {
@@ -27,13 +26,6 @@
 				"FlowRPG",
 				"MyExampleNFT",
 				"NonFungibleToken"
-			]
-		},
-		"testnet": {
-			"flow-rpg-testnet": [
-				"MyExampleNFT",
-				"NonFungibleToken",
-				"FlowRPG"
 			]
 		}
 	}
