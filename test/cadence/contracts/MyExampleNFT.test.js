@@ -22,12 +22,12 @@ describe('cadence/contracts/MyExampleNFT', () => {
         });
         await safeSendTransaction({
             name: 'mint_example',
-            args: [user1, 'my-new-nft', '3'],
+            args: [user1, 'my-new-nft', 'my-url'],
             signers: [admin],
         });
         await safeSendTransaction({
             name: 'mint_example',
-            args: [user1, 'another-nft', '14'],
+            args: [user1, 'another-nft', 'my-url-2'],
             signers: [admin],
         });
         let [result] = await safeExecuteScript({
@@ -40,6 +40,6 @@ describe('cadence/contracts/MyExampleNFT', () => {
             args: [user1, result[0]],
         });
         expect(result.name).toEqual('another-nft');
-        expect(result.luckyNumber).toEqual('14');
+        expect(result.imageURL).toEqual('my-url-2');
     });
 });
