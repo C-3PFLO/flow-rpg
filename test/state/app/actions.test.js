@@ -1,21 +1,52 @@
 import * as actions from '../../../src/state/app/actions';
 import ActionTypes from '../../../src/state/app/action-types';
 
+import * as fcl from '@onflow/fcl';
+jest.mock('@onflow/fcl');
+
 describe('state/app/actions', () => {
-    describe('setLoggedIn', () => {
+    describe('init', () => {
+        beforeEach(() => {
+            fcl.currentUser.snapshot(() => {});
+        });
+        afterEach(() => {
+            jest.clearAllMocks();
+        });
         it('nominal', () => {
-            const action = actions.setLoggedIn(true);
-            expect(action.type)
-                .toEqual(ActionTypes.SET_LOGGED_IN);
-            expect(action.payload).toEqual(true);
+            const action = actions.init();
+            expect(action.type).toEqual(ActionTypes.INIT_APP);
+            expect(fcl.currentUser.snapshot).toHaveBeenCalled();
         });
     });
-    describe('setLoggedInAccount', () => {
+    describe('login', () => {
+        let _callback;
+        beforeEach(() => {
+            fcl.currentUser.subscribe.mockImplementationOnce((callback) => {
+                _callback = callback;
+            });
+            fcl.authenticate.mockImplementationOnce(() => {});
+        });
+        afterEach(() => {
+            jest.clearAllMocks();
+        });
+        it('nominal', (done) => {
+            const action = actions.login();
+            expect(action.type).toEqual(ActionTypes.LOGIN);
+            expect(fcl.currentUser.subscribe).toHaveBeenCalled();
+            expect(fcl.authenticate).toHaveBeenCalled();
+            action.payload.promise.then((response) => {
+                expect(response).toEqual({ loggedIn: true, some: 'data' });
+                done();
+            });
+            _callback({});
+            _callback({ loggedIn: false });
+            _callback({ loggedIn: true, some: 'data' });
+        });
+    });
+    describe('logout', () => {
         it('nominal', () => {
-            const action = actions.setLoggedInAccount({ some: 'data' });
-            expect(action.type)
-                .toEqual(ActionTypes.SET_LOGGED_IN_ACCOUNT);
-            expect(action.payload).toEqual({ some: 'data' });
+            const action = actions.logout();
+            expect(action.type).toEqual(ActionTypes.LOGOUT);
         });
     });
 });

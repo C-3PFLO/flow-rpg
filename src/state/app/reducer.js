@@ -5,6 +5,7 @@
 */
 
 import ActionTypes from './action-types.js';
+import { AsyncStatus } from '../constants.js';
 import * as utils from '../utils.js';
 
 /**
@@ -15,8 +16,12 @@ const ErrorCodes = {
 };
 
 const initialState = {
-    loggedIn: false,
-    loggedInAccount: null,
+    currentUser: {},
+    persistence: {
+        initialized: false,
+        pending: false,
+        error: null,
+    },
 };
 
 /**
@@ -32,13 +37,36 @@ function reduce(state, action) {
     }
     let newState = {};
     switch (action.type) {
-    case ActionTypes.SET_LOGGED_IN:
-        newState = utils.deepCopy(state);
-        newState.loggedIn = action.payload;
+    case ActionTypes.INIT_APP + AsyncStatus.PENDING:
+        newState = utils.deepCopy(initialState); // reset to initial
+        newState.persistence.pending = true;
         break;
-    case ActionTypes.SET_LOGGED_IN_ACCOUNT:
+    case ActionTypes.INIT_APP + AsyncStatus.SUCCESS:
         newState = utils.deepCopy(state);
-        newState.loggedInAccount = action.payload;
+        newState.persistence.initialized = true;
+        newState.persistence.pending = false;
+        if (action.payload.loggedIn) {
+            newState.currentUser = action.payload;
+        }
+        break;
+    case ActionTypes.LOGIN + AsyncStatus.PENDING:
+        newState = utils.deepCopy(initialState); // reset to initial
+        newState.persistence.pending = true;
+        break;
+    case ActionTypes.LOGIN + AsyncStatus.SUCCESS:
+        newState = utils.deepCopy(state);
+        newState.persistence.initialized = true;
+        newState.persistence.pending = false;
+        newState.currentUser = action.payload;
+        break;
+    case ActionTypes.LOGOUT:
+        newState = utils.deepCopy(initialState); // reset to initial
+        break;
+    case ActionTypes.INIT_APP + AsyncStatus.FAILURE:
+    case ActionTypes.LOGIN + AsyncStatus.FAILURE:
+        newState = utils.deepCopy(state);
+        newState.persistence.pending = false;
+        newState.persistence.error = action.payload;
         break;
     default:
         newState = state;

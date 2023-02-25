@@ -6,31 +6,58 @@
 
 import ActionTypes from './action-types.js';
 
+import * as fcl from '@onflow/fcl';
+
 /**
  * @public
- * @param {Boolean} loggedIn
+ * @return {Promise}
+ */
+function _loginAndWait() {
+    return new Promise((resolve) => {
+        // HACK: subscribing multiple times - need an unsubscribe
+        fcl.currentUser.subscribe((currentUser) => {
+            // HACK: need to check for rejection, but not clear
+            // what those responses actually look like
+            // not called back on login window dismissal to cancel
+            if (currentUser && currentUser.loggedIn) {
+                resolve(currentUser);
+            }
+        });
+        fcl.authenticate();
+    });
+}
+
+/**
+ * @public
  * @return {Object} action
  */
-function setLoggedIn(loggedIn) {
+export function init() {
     return {
-        type: ActionTypes.SET_LOGGED_IN,
-        payload: loggedIn,
+        type: ActionTypes.INIT_APP,
+        payload: fcl.currentUser.snapshot(),
     };
 }
 
 /**
  * @public
- * @param {Object} loggedInAccount
  * @return {Object} action
  */
-function setLoggedInAccount(loggedInAccount) {
+export function login() {
     return {
-        type: ActionTypes.SET_LOGGED_IN_ACCOUNT,
-        payload: loggedInAccount,
+        type: ActionTypes.LOGIN,
+        payload: {
+            promise: _loginAndWait(),
+        },
     };
 }
 
-export {
-    setLoggedIn,
-    setLoggedInAccount,
-};
+/**
+ * @public
+ * @return {Object} action
+ */
+export function logout() {
+    fcl.unauthenticate();
+    return {
+        type: ActionTypes.LOGOUT,
+    };
+}

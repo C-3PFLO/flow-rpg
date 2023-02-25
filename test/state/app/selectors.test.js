@@ -1,14 +1,19 @@
 import * as selectors from '../../../src/state/app/selectors';
 
 describe('state/app/selectors', () => {
-    const state = {
-        app: {
-            loggedIn: true,
-            loggedInAccount: {
-                some: 'data',
+    let state;
+    beforeEach(() => {
+        state = {
+            app: {
+                currentUser: {},
+                persistence: {
+                    initialized: false,
+                    pending: false,
+                    error: null,
+                },
             },
-        },
-    };
+        };
+    });
     describe('getApp', () => {
         it('nominal', () => {
             expect(selectors.getApp(state))
@@ -16,21 +21,23 @@ describe('state/app/selectors', () => {
             expect(selectors.getApp(state))
                 .not.toBe(state.app);
         });
-        it('empty', () => {
-            expect(selectors.getApp({}))
-                .toEqual(null);
-        });
     });
     describe('getLoggedIn', () => {
-        it('nominal', () => {
+        it('initialized = false', () => {
+            expect(selectors.getLoggedIn(state))
+                .toEqual(false);
+        });
+        it('currentUser.loggedIn = false', () => {
+            state.app.persistence.initialized = true;
+            state.app.currentUser.loggedIn = false;
+            expect(selectors.getLoggedIn(state))
+                .toEqual(false);
+        });
+        it('loggedIn = true', () => {
+            state.app.persistence.initialized = true;
+            state.app.currentUser.loggedIn = true;
             expect(selectors.getLoggedIn(state))
                 .toEqual(true);
-        });
-    });
-    describe('getLoggedInAccount', () => {
-        it('nominal', () => {
-            expect(selectors.getLoggedInAccount(state))
-                .toEqual({ some: 'data' });
         });
     });
 });

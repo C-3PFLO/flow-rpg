@@ -9,8 +9,9 @@
 * @const {String}
 */
 const ActionTypes = {
-    SET_LOGGED_IN: 'SET_LOGGED_IN',
-    SET_LOGGED_IN_ACCOUNT: `SET_LOGGED_IN_ACCOUNT`,
+    INIT_APP: 'INIT_APP',
+    LOGIN: 'LOGIN',
+    LOGOUT: 'LOGOUT',
 };
 
 export default ActionTypes;

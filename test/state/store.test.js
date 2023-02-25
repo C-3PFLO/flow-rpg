@@ -7,7 +7,6 @@ jest.mock('redux');
 describe('state/store', () => {
     const _store = { a: 'store' };
     beforeEach(() => {
-        jest.clearAllMocks();
         redux.createStore.mockImplementationOnce(() => {
             return _store;
         });
@@ -19,6 +18,7 @@ describe('state/store', () => {
         });
     });
     afterEach(() => {
+        jest.clearAllMocks();
         store._resetStore();
     });
     describe('createStore', () => {
