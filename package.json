@@ -9,6 +9,7 @@
         "check": "eslint src test",
         "test": "jest",
         "test:watch": "jest --coverage --watch",
+        "hydrate": "babel src -d dist; node dist/hydrate.js",
         "start": "npx webpack serve"
     },
     "repository": {

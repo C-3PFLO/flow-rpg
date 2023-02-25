@@ -14,12 +14,12 @@ pub contract MyExampleNFT: NonFungibleToken {
     pub resource NFT: NonFungibleToken.INFT {
         pub let id: UInt64
         pub let name: String
-        pub let luckyNumber: Int
+        pub let imageURL: String
 
-        init(_name: String, _luckyNumber: Int) {
+        init(_name: String, _imageURL: String) {
             self.id = self.uuid
             self.name = _name
-            self.luckyNumber = _luckyNumber
+            self.imageURL = _imageURL
         }
     }
 
@@ -75,10 +75,10 @@ pub contract MyExampleNFT: NonFungibleToken {
     }
 
     pub resource Minter {
-        pub fun createNFT(name: String, luckyNumber: Int): @NFT {
+        pub fun createNFT(name: String, imageURL: String): @NFT {
             return <- create NFT(
                 _name: name,
-                _luckyNumber: luckyNumber
+                _imageURL: imageURL
             )
         }
         pub fun createMinter(): @Minter {

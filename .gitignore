@@ -2,5 +2,6 @@
 node_modules
 artifacts
 dist
+flowdb
 
 *.private.json
