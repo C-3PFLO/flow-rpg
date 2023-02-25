@@ -12,8 +12,8 @@
 	},
 	"accounts": {
 		"default": {
-			"address": "f669cb8d41ce0c74",
-			"key": "d928dedb74a7b3c2e05fffc657acf902d70b7ac7c71f9c130d86a040e74c4d43"
+			"address": "f3fcd2c1a78f5eee",
+			"key": "fadf32ccb89d0bfb1442b4a4c5fb9257b1a54d39ec1e29aaafb6daefd0cc8d35"
 		},
 		"emulator-account": {
 			"address": "f8d6e0586b0a20c7",
@@ -30,3 +30,4 @@
 		}
 	}
 }
+ 

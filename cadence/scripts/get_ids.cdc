@@ -8,3 +8,4 @@ pub fun main(address: Address): [UInt64] {
             .borrow<&MyExampleNFT.Collection{NonFungibleToken.CollectionPublic}>()!
     return publicCollection.getIDs()
 }
+ 
