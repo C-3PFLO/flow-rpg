@@ -108,6 +108,28 @@ describe('cadence/contracts/FlowRPG', () => {
         });
         expect(result.name).toEqual('R2D2');
     });
+    it('updateHitPoints', async () => {
+        await safeSendTransaction({
+            name: 'attach_rpg_character',
+            args: rpgArgs,
+            signers: [user1],
+        });
+        await safeSendTransaction({
+            name: 'update_hitpoints',
+            args: [
+                user1,
+                '/public/myExampleNFTCollectionV1',
+                nftID,
+                '-2',
+            ],
+            signers: [admin],
+        });
+        const [result] = await safeExecuteScript({
+            name: 'get_rpg_character',
+            args: [user1, '/public/myExampleNFTCollectionV1', nftID],
+        });
+        expect(result.hitPoints).toEqual('4');
+    });
     it('panics if attribute > 15', async () => {
         rpgArgs[7] = '16';
         const [, error] = await shallRevert(
@@ -152,5 +174,19 @@ describe('cadence/contracts/FlowRPG', () => {
             }),
         );
         expect(error).toContain('classID does not exist');
+    });
+    it('panics on updateHitPoints', async () => {
+        const [, error] = await shallRevert(
+            sendTransaction({
+                name: 'user_update_hitpoints_panics',
+                args: [
+                    '/storage/myExampleNFTCollectionV1',
+                    nftID,
+                    '-4',
+                ],
+                signers: [user1],
+            }),
+        );
+        expect(error).toContain('function has contract access');
     });
 });

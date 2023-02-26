@@ -105,14 +105,14 @@ pub contract FlowRPG {
         pub let bonuses: [Attribute]
         pub let savingThrows: [Attribute]
         pub let attackAbilities: [AttackAbility]
-        pub let initialHitPoints: UInt64
+        pub let initialHitPoints: Int64
         init(
             name: String,
             description: String,
             bonuses: [Attribute],
             savingThrows: [Attribute],
             attackAbilities: [AttackAbility],
-            initialHitPoints: UInt64
+            initialHitPoints: Int64
         ) {
             self.name = name
             self.description = description
@@ -128,14 +128,14 @@ pub contract FlowRPG {
         pub let classID: String
         pub let alignment: String
         pub let attributes: AttributePoints
-        pub var hitPoints: UInt64
+        pub var hitPoints: Int64
 
         pub fun getName(): String
         pub fun getClassID(): String
         pub fun getClass(): Class
         pub fun getAlignment(): String
         pub fun getAttributes(): AttributePoints
-        pub fun getHitPoints(): UInt64
+        pub fun getHitPoints(): Int64
     }
 
     pub resource interface Private {
@@ -147,7 +147,7 @@ pub contract FlowRPG {
         pub let classID: String
         pub let alignment: String
         pub let attributes: AttributePoints
-        pub var hitPoints: UInt64
+        pub var hitPoints: Int64
 
         pub fun getName(): String {
             return self.name
@@ -173,12 +173,12 @@ pub contract FlowRPG {
             return self.attributes
         }
 
-        pub fun getHitPoints(): UInt64 {
+        pub fun getHitPoints(): Int64 {
             return self.hitPoints
         }
 
         // Admin only
-        access(contract) fun updateHitPoints(delta: UInt64) {
+        access(contract) fun updateHitPoints(delta: Int64) {
             self.hitPoints = self.hitPoints + delta
         }
 
@@ -223,7 +223,7 @@ pub contract FlowRPG {
 
     pub resource GameKeeper {
         // TODO: test that this is only accessible by GameKeeper
-        pub fun updateHitPoints(char: &FlowRPG.RPGCharacter, delta: UInt64) {
+        pub fun updateHitPoints(char: &FlowRPG.RPGCharacter, delta: Int64) {
             char.updateHitPoints(delta: delta)
         }
         // TODO: test
@@ -234,7 +234,7 @@ pub contract FlowRPG {
             bonuses: [Attribute],
             savingThrows: [Attribute],
             attackAbilities: [AttackAbility],
-            initialHitPoints: UInt64 ) {
+            initialHitPoints: Int64 ) {
             pre {
                 FlowRPG.classes[classID] == nil : "classID exists"
             }
