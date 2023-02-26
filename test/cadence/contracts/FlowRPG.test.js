@@ -82,6 +82,38 @@ describe('cadence/contracts/FlowRPG', () => {
             },
         });
     });
+    xit('setName', async () => {
+        // attach rpg character to it and inspect result
+        await safeSendTransaction({
+            name: 'attach_rpg_character',
+            args: [
+                '/storage/myExampleNFTCollectionV1',
+                '/public/myExampleNFTCollectionV1',
+                nftID,
+                'c-3pflo',
+                '8', '11', '8', '15', '15', '12',
+                'wizard',
+                'good-lawful',
+            ],
+            signers: [user1],
+        });
+        await safeSendTransaction({
+            // TODO: write set_name
+            name: 'set_name',
+            args: [
+                '/storage/myExampleNFTCollectionV1',
+                '/public/myExampleNFTCollectionV1',
+                nftID,
+                'r2d2',
+            ],
+            signers: [user1],
+        });
+        const [result] = await safeExecuteScript({
+            name: 'get_rpg_character',
+            args: [user1, '/public/myExampleNFTCollectionV1', nftID],
+        });
+        expect(result.name).toEqual('r2d2');
+    });
     it('panics if attribute > 15', async () => {
         const [, error] = await shallRevert(
             sendTransaction({

@@ -2,7 +2,27 @@ import NonFungibleToken from "./NonFungibleToken.cdc"
 
 pub contract FlowRPG {
 
+    pub var totalSupply: UInt64
+    pub var classes: {String: Class}
+    pub let GameKeeperStoragePath: StoragePath
+
     pub event ContractInitialized()
+    pub event Minted() // TODO
+
+    pub enum Attribute: UInt64 {
+        pub case strength
+        pub case dexterity
+        pub case constitution
+        pub case intelligence
+        pub case wisdom
+        pub case charisma
+    }
+
+    pub enum AttackAbility: UInt64 {
+        pub case melee
+        pub case ranged
+        pub case spell
+    }
 
     pub fun calculatePointBuy(
         strength: UInt64,
@@ -23,14 +43,18 @@ pub contract FlowRPG {
             pointCost[charisma]!
     }
 
+    pub fun getClassFromID(classID: String): FlowRPG.Class {
+        return self.classes[classID]!
+    }
+
     // base scores excluding any modifiers
     pub struct AttributePoints {
-        pub let strength: UInt64
-        pub let dexterity: UInt64
-        pub let constitution: UInt64
-        pub let intelligence: UInt64
-        pub let wisdom: UInt64
-        pub let charisma: UInt64
+        pub var strength: UInt64
+        pub var dexterity: UInt64
+        pub var constitution: UInt64
+        pub var intelligence: UInt64
+        pub var wisdom: UInt64
+        pub var charisma: UInt64
         init(
             strength: UInt64,
             dexterity: UInt64,
@@ -75,21 +99,6 @@ pub contract FlowRPG {
         }
     }
 
-    pub enum Attribute: UInt64 {
-        pub case strength
-        pub case dexterity
-        pub case constitution
-        pub case intelligence
-        pub case wisdom
-        pub case charisma
-    }
-
-    pub enum AttackAbility: UInt64 {
-        pub case melee
-        pub case ranged
-        pub case spell
-    }
-
     pub struct Class {
         pub let name: String
         pub let description: String
@@ -111,30 +120,89 @@ pub contract FlowRPG {
         }
     }
 
-    pub let classes: {String: Class}
-
-    pub attachment RPGCharacter for NonFungibleToken.INFT {
-        pub let name: String
-        pub let attributes: AttributePoints
+    pub resource interface Public {
+        pub var name: String
         pub let classID: String
         pub let alignment: String
+        pub let attributes: AttributePoints
+        pub var hitPoints: UInt64
+
+        pub fun getName(): String
+        pub fun getClassID(): String
+        pub fun getClass(): Class
+        pub fun getAlignment(): String
+        pub fun getAttributes(): AttributePoints
+        pub fun getHitPoints(): UInt64
+    }
+
+    pub resource interface Private {
+        pub fun setName(name: String)
+    }
+
+    pub resource interface Admin {
+        access(contract) fun updateHitPoints(delta: UInt64)
+    }
+
+    pub attachment RPGCharacter for NonFungibleToken.INFT: Public, Private, Admin {
+        pub var name: String
+        pub let classID: String
+        pub let alignment: String
+        pub let attributes: AttributePoints
+        pub var hitPoints: UInt64
+
+        pub fun getName(): String {
+            return self.name
+        }
+
+        pub fun setName(name: String) {
+            self.name = name
+        }
+
+        pub fun getClassID(): String {
+            return self.classID
+        }
+
+        pub fun getClass(): FlowRPG.Class {
+            return FlowRPG.getClassFromID(classID: self.classID)
+        }
+
+        pub fun getAlignment(): String {
+            return self.alignment
+        }
+
+        pub fun getAttributes(): AttributePoints {
+            return self.attributes
+        }
+
+        pub fun getHitPoints(): UInt64 {
+            return self.hitPoints
+        }
+
+        access(contract) fun updateHitPoints(delta: UInt64) {
+            self.hitPoints = self.hitPoints + delta
+        }
+
         init(
             name: String,
             attributes: AttributePoints,
             classID: String,
             alignment: String
         ) {
+            FlowRPG.totalSupply = FlowRPG.totalSupply + 1
             self.name = name
             self.attributes = attributes
             self.classID = classID
             self.alignment = alignment
+            self.hitPoints = 10
         }
     }
 
-    pub fun getClassFromID(classID: String): FlowRPG.Class {
-        return self.classes[classID]!
-    }
-
+    // only the older of an nft can 'attach' something to it
+    // and an attachment must be created in the statement where it is attached
+    // thus we cannot use something like a minter pattern, where
+    // only an admin user can mint an RPGCharacter and send it to users
+    // if this were to be gated or monetized, that would have to happen
+    // within this public function
     pub fun attachRPGCharacter(
         nft: @{NonFungibleToken.INFT},
         name: String,
@@ -142,6 +210,7 @@ pub contract FlowRPG {
         classID: String,
         alignment: String
     ): @{NonFungibleToken.INFT} {
+        emit Minted() // TODO
         return <- attach RPGCharacter(
             name: name,
             attributes: attributes,
@@ -150,8 +219,21 @@ pub contract FlowRPG {
         ) to <- nft
     }
 
+    pub resource GameKeeper {
+        pub fun updateHitPoints(char: &FlowRPG.RPGCharacter, delta: UInt64) {
+            char.updateHitPoints(delta: delta)
+        }
+        pub fun createGameKeeper(): @GameKeeper {
+            return <- create GameKeeper()
+        }
+    }
+
     init() {
-        emit ContractInitialized()
+        self.totalSupply = 0
+
+        self.GameKeeperStoragePath = /storage/FlowRPGGameKeeperV1
+        self.account.save(<- create GameKeeper(), to: self.GameKeeperStoragePath)
+
         self.classes = {
             "wizard": FlowRPG.Class(
                 name: "Wizard",
@@ -189,6 +271,8 @@ pub contract FlowRPG {
                 attackAbilities: [AttackAbility.melee, AttackAbility.ranged]
             )
         }
+
+        emit ContractInitialized()
     }
 }
  
