@@ -7,17 +7,18 @@ transaction(
     name: String
 ) {
 
-    var nft: &NonFungibleToken.NFT
+    var rpg: &FlowRPG.RPGCharacter
 
     prepare(acct: AuthAccount) {
-        let publicCollection = acct.borrow<&AnyResource{NonFungibleToken.CollectionPublic}>(
+        let collection = acct.borrow<&AnyResource{NonFungibleToken.CollectionPublic}>(
             from: collectionStoragePath
         )!
-        self.nft = publicCollection.borrowNFT(id: itemID)
+        let nft = collection.borrowNFT(id: itemID)
+        self.rpg = nft[FlowRPG.RPGCharacter]!
     }
 
     execute {
-        self.nft[FlowRPG.RPGCharacter]!.setName(name: name)
+        self.rpg.setName(name: name)
     }
 }
  

@@ -105,7 +105,7 @@ describe('cadence/contracts/FlowRPG', () => {
             args: [
                 '/storage/myExampleNFTCollectionV1',
                 nftID,
-                'r2d2',
+                'R2D2',
             ],
             signers: [user1],
         });
@@ -113,7 +113,7 @@ describe('cadence/contracts/FlowRPG', () => {
             name: 'get_rpg_character',
             args: [user1, '/public/myExampleNFTCollectionV1', nftID],
         });
-        expect(result.name).toEqual('r2d2');
+        expect(result.name).toEqual('R2D2');
     });
     it('panics if attribute > 15', async () => {
         const [, error] = await shallRevert(
