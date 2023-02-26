@@ -84,7 +84,7 @@ describe('cadence/contracts/FlowRPG', () => {
             hitPoints: '6',
         });
     });
-    xit('setName', async () => {
+    it('setName', async () => {
         // attach rpg character to it and inspect result
         await safeSendTransaction({
             name: 'attach_rpg_character',
@@ -104,7 +104,6 @@ describe('cadence/contracts/FlowRPG', () => {
             name: 'set_name',
             args: [
                 '/storage/myExampleNFTCollectionV1',
-                '/public/myExampleNFTCollectionV1',
                 nftID,
                 'r2d2',
             ],
