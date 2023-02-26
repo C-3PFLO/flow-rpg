@@ -1,7 +1,7 @@
 import MyExampleNFT from "../contracts/MyExampleNFT.cdc"
 import NonFungibleToken from "../contracts/NonFungibleToken.cdc"
 
-transaction(recipient: Address, name: String, luckyNumber: Int) {
+transaction(recipient: Address, name: String, imageURL: String) {
 
     prepare(signer: AuthAccount) {
         let minter = 
@@ -10,7 +10,7 @@ transaction(recipient: Address, name: String, luckyNumber: Int) {
             )!
         let nft <- minter.createNFT(
             name: name,
-            luckyNumber: luckyNumber
+            imageURL: imageURL
         )
         let recipientsCollection = getAccount(recipient)
             .getCapability(MyExampleNFT.CollectionPublicPath)

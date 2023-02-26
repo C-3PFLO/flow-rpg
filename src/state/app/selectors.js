@@ -47,3 +47,23 @@ export function getLoggedIn(state) {
     const currentUser = getCurrentUser(state);
     return persistence.initialized && currentUser.loggedIn;
 }
+
+/**
+ * @public
+ * @param {Object} state current state
+ * @return {Object} state
+ */
+export function getCurrentAddress(state) {
+    const currentUser = getCurrentUser(state);
+    return currentUser && currentUser.addr ? currentUser.addr : null;
+}
+
+/**
+ * @public
+ * @param {Object} state current state
+ * @return {Object} state
+ */
+export function hasCollection(state) {
+    const app = getApp(state);
+    return app ? app.hasCollection : null;
+}

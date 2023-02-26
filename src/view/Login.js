@@ -1,8 +1,10 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { getCurrentUser, getLoggedIn } from '../state/app/selectors';
-import { login, logout } from '../state/app/actions';
+import { getCurrentUser, getLoggedIn, hasCollection } from '../state/app/selectors';
+
+import { loginAndCheck } from '../state/compound-actions';
+import { logout, initCollection } from '../state/app/actions';
 
 /**
  * Get component function
@@ -19,12 +21,16 @@ export function Login() {
             </div>
             <button
                 hidden={useSelector(getLoggedIn)}
-                onClick={() => dispatch(login())}>
+                onClick={() => dispatch(loginAndCheck())}>
                     Login</button>
             <button
                 hidden={!useSelector(getLoggedIn)}
                 onClick={() => dispatch(logout())}>
                     Logout</button>
+            <div>Has collection: {useSelector(hasCollection) ? 'YES' : 'NO'}</div>
+            <button
+                onClick={() => dispatch(initCollection())}
+            >Init Collection</button>
         </div>
     );
 }

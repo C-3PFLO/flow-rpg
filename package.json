@@ -9,6 +9,10 @@
         "check": "eslint src test",
         "test": "jest",
         "test:watch": "jest --coverage --watch",
+        "start:flow-emulator": "flow emulator start -v",
+        "start:flow-dev": "wait-on tcp:8080 && flow dev",
+        "start:flow-dev-wallet": "wait-on tcp:8080 && flow dev-wallet",
+        "start:flow": "concurrently \"npm run start:flow-emulator\" \"npm run start:flow-dev\" \"npm run start:flow-dev-wallet\"",
         "start": "npx webpack serve"
     },
     "repository": {
@@ -29,6 +33,7 @@
         "@onflow/flow-js-testing": "^0.3.0-alpha.17",
         "babel-jest": "^29.4.2",
         "babel-loader": "^8.2.3",
+        "concurrently": "^7.6.0",
         "copy-webpack-plugin": "^8.1.1",
         "css-loader": "^6.6.0",
         "eslint": "^8.33.0",
@@ -40,6 +45,7 @@
         "jest-junit": "^13.0.0",
         "path": "^0.12.7",
         "style-loader": "^3.3.1",
+        "wait-on": "^7.0.1",
         "webpack": "^5.33.2",
         "webpack-cli": "^4.6.0",
         "webpack-dev-server": "^4.7.3"

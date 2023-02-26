@@ -9,6 +9,7 @@ import * as utils from '../../../src/state/utils.js';
 describe('state/app/reducer', () => {
     const initialState = {
         currentUser: {},
+        hasCollection: false,
         persistence: {
             initialized: false,
             pending: false,
