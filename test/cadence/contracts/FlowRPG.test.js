@@ -1,5 +1,7 @@
 import {
     getAccountAddress,
+    sendTransaction,
+    shallRevert,
 } from '@onflow/flow-js-testing';
 
 import {
@@ -42,12 +44,7 @@ describe('cadence/contracts/FlowRPG', () => {
                 '/public/myExampleNFTCollectionV1',
                 nftID,
                 'c-3pflo',
-                '8',
-                '11',
-                '8',
-                '20',
-                '17',
-                '15',
+                '8', '11', '8', '15', '15', '12',
             ],
             signers: [user1],
         });
@@ -59,9 +56,57 @@ describe('cadence/contracts/FlowRPG', () => {
             strength: '8',
             dexterity: '11',
             constitution: '8',
-            intelligence: '20',
-            wisdom: '17',
-            charisma: '15',
+            intelligence: '15',
+            wisdom: '15',
+            charisma: '12',
         });
+    });
+    it('panics if attribute > 15', async () => {
+        const [, error] = await shallRevert(
+            sendTransaction({
+                name: 'attach_rpg_character',
+                args: [
+                    '/storage/myExampleNFTCollectionV1',
+                    '/public/myExampleNFTCollectionV1',
+                    nftID,
+                    'c-3pflo',
+                    '8', '11', '8', '20', '15', '12',
+                ],
+                signers: [user1],
+            }),
+        );
+        expect(error).toContain('exceeds maximum initial value');
+    });
+    it('panics if attribute < 8', async () => {
+        const [, error] = await shallRevert(
+            sendTransaction({
+                name: 'attach_rpg_character',
+                args: [
+                    '/storage/myExampleNFTCollectionV1',
+                    '/public/myExampleNFTCollectionV1',
+                    nftID,
+                    'c-3pflo',
+                    '1', '11', '8', '15', '15', '12',
+                ],
+                signers: [user1],
+            }),
+        );
+        expect(error).toContain('less than minimum initial value');
+    });
+    it('panics if total points > 27', async () => {
+        const [, error] = await shallRevert(
+            sendTransaction({
+                name: 'attach_rpg_character',
+                args: [
+                    '/storage/myExampleNFTCollectionV1',
+                    '/public/myExampleNFTCollectionV1',
+                    nftID,
+                    'c-3pflo',
+                    '8', '15', '8', '15', '15', '15',
+                ],
+                signers: [user1],
+            }),
+        );
+        expect(error).toContain('exceeds maximum total points');
     });
 });

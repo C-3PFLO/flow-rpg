@@ -4,6 +4,26 @@ pub contract FlowRPG {
 
     pub event ContractInitialized()
 
+    pub fun calculatePointBuy(
+        strength: UInt64,
+        dexterity: UInt64,
+        constitution: UInt64,
+        intelligence: UInt64,
+        wisdom: UInt64,
+        charisma: UInt64,
+    ) : UInt64 {
+        let pointCost: {UInt64: UInt64} = {
+            8: 0, 9: 1, 10: 2, 11: 3, 12: 4, 13: 5, 14: 7, 15: 9
+        }
+        return pointCost[strength]! +
+            pointCost[dexterity]! +
+            pointCost[constitution]! +
+            pointCost[intelligence]! +
+            pointCost[wisdom]! +
+            pointCost[charisma]!
+    }
+
+    // base scores excluding any modifiers
     pub struct AttributePoints {
         pub let strength: UInt64
         pub let dexterity: UInt64
@@ -19,23 +39,32 @@ pub contract FlowRPG {
             wisdom: UInt64,
             charisma: UInt64,
         ) {
-            // enforce global rules here, but defer rules like
-            // point-buy for when creating character
+            // attributes must follow point-buy rules during initialization
+            // https://www.dndbeyond.com/sources/basic-rules/step-by-step-characters#3DetermineAbilityScores
             pre {
-                // less than 20
-                strength <= 20 : "exceeds max attribute score"
-                dexterity <= 20 : "exceeds max attribute score"
-                constitution <= 20 : "exceeds max attribute score"
-                intelligence <= 20 : "exceeds max attribute score"
-                wisdom <= 20 : "exceeds max attribute score"
-                charisma <= 20 : "exceeds max attribute score"
-                // more than 0
-                strength >= 0 : "less than minimum attribute score"
-                dexterity >= 0 : "less than minimum attribute score"
-                constitution >= 0 : "less than minimum attribute score"
-                intelligence >= 0 : "less than minimum attribute score"
-                wisdom >= 0 : "less than minimum attribute score"
-                charisma >= 0 : "less than minimum attribute score"
+                // <= 15
+                strength <= 15 : "exceeds maximum initial value"
+                dexterity <= 15 : "exceeds maximum initial value"
+                constitution <= 15 : "exceeds maximum initial value"
+                intelligence <= 15 : "exceeds maximum initial value"
+                wisdom <= 15 : "exceeds maximum initial value"
+                charisma <= 15 : "exceeds maximum initial value"
+                // >= 8
+                strength >= 8 : "less than minimum initial value"
+                dexterity >= 8 : "less than minimum initial value"
+                constitution >= 8 : "less than minimum initial value"
+                intelligence >= 8 : "less than minimum initial value"
+                wisdom >= 8 : "less than minimum initial value"
+                charisma >= 8 : "less than minimum initial value"
+                // <= 27 points spent
+                FlowRPG.calculatePointBuy(
+                    strength: strength,
+                    dexterity: dexterity,
+                    constitution: constitution,
+                    intelligence: intelligence,
+                    wisdom: wisdom,
+                    charisma: charisma
+                ) <= 27 : "exceeds maximum total points"
             }
             self.strength = strength
             self.dexterity = dexterity
