@@ -200,7 +200,7 @@ pub contract FlowRPG {
         }
     }
 
-    // only the older of an nft can 'attach' something to it
+    // only the owner of an nft can 'attach' something to it
     // and an attachment must be created in the statement where it is attached
     // thus we cannot use something like a minter pattern, where
     // only an admin user can mint an RPGCharacter and send it to users
