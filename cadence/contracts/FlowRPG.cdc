@@ -75,31 +75,120 @@ pub contract FlowRPG {
         }
     }
 
+    pub enum Attribute: UInt64 {
+        pub case strength
+        pub case dexterity
+        pub case constitution
+        pub case intelligence
+        pub case wisdom
+        pub case charisma
+    }
+
+    pub enum AttackAbility: UInt64 {
+        pub case melee
+        pub case ranged
+        pub case spell
+    }
+
+    pub struct Class {
+        pub let name: String
+        pub let description: String
+        pub let bonuses: [Attribute]
+        pub let savingThrows: [Attribute]
+        pub let attackAbilities: [AttackAbility]
+        init(
+            name: String,
+            description: String,
+            bonuses: [Attribute],
+            savingThrows: [Attribute],
+            attackAbilities: [AttackAbility]
+        ) {
+            self.name = name
+            self.description = description
+            self.bonuses = bonuses
+            self.savingThrows = savingThrows
+            self.attackAbilities = attackAbilities
+        }
+    }
+
+    pub let classes: {String: Class}
+
     pub attachment RPGCharacter for NonFungibleToken.INFT {
         pub let name: String
         pub let attributes: AttributePoints
+        pub let classID: String
+        pub let alignment: String
         init(
             name: String,
-            attributes: AttributePoints
+            attributes: AttributePoints,
+            classID: String,
+            alignment: String
         ) {
             self.name = name
             self.attributes = attributes
+            self.classID = classID
+            self.alignment = alignment
         }
+    }
+
+    pub fun getClassFromID(classID: String): FlowRPG.Class {
+        return self.classes[classID]!
     }
 
     pub fun attachRPGCharacter(
         nft: @{NonFungibleToken.INFT},
         name: String,
-        attributes: AttributePoints
+        attributes: AttributePoints,
+        classID: String,
+        alignment: String
     ): @{NonFungibleToken.INFT} {
         return <- attach RPGCharacter(
             name: name,
-            attributes: attributes
+            attributes: attributes,
+            classID: classID,
+            alignment: alignment
         ) to <- nft
     }
 
     init() {
         emit ContractInitialized()
+        self.classes = {
+            "wizard": FlowRPG.Class(
+                name: "Wizard",
+                description: "to do ...",
+                bonuses: [Attribute.intelligence, Attribute.wisdom],
+                savingThrows: [Attribute.intelligence],
+                attackAbilities: [AttackAbility.spell]
+            ),
+            "sorcerer": FlowRPG.Class(
+                name: "Sorcerer",
+                description: "to do ...",
+                bonuses: [Attribute.charisma, Attribute.intelligence],
+                savingThrows: [Attribute.constitution],
+                attackAbilities: [AttackAbility.spell]
+            ),
+            "barbarian": FlowRPG.Class(
+                name: "Barbarian",
+                description: "to do ...",
+                bonuses: [Attribute.strength, Attribute.constitution],
+                savingThrows: [Attribute.strength],
+                attackAbilities: [AttackAbility.melee]
+            ),
+            "ranger": FlowRPG.Class(
+                name: "Ranger",
+                description: "to do ...",
+                bonuses: [Attribute.dexterity, Attribute.constitution],
+                savingThrows: [Attribute.dexterity],
+                attackAbilities: [AttackAbility.ranged]
+            ),
+            "rogue": FlowRPG.Class(
+                name: "Rogue",
+                description: "to do ...",
+                bonuses: [Attribute.dexterity],
+                savingThrows: [Attribute.dexterity],
+                attackAbilities: [AttackAbility.melee, AttackAbility.ranged]
+            )
+        }
     }
 }
  

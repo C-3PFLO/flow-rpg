@@ -12,6 +12,8 @@ transaction(
     intelligence: UInt64,
     wisdom: UInt64,
     charisma: UInt64,
+    classID: String,
+    alignment: String
 ) {
 
     let receiverCapability: Capability<&{NonFungibleToken.Receiver}>
@@ -44,7 +46,9 @@ transaction(
         let rpgNFT <- FlowRPG.attachRPGCharacter(
             nft: <- self.nft,
             name: name,
-            attributes: attributes
+            attributes: attributes,
+            classID: classID,
+            alignment: alignment
         ) as! @NonFungibleToken.NFT
         self.receiverCapability
             .borrow()!

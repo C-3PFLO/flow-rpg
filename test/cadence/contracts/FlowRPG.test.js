@@ -45,11 +45,13 @@ describe('cadence/contracts/FlowRPG', () => {
                 nftID,
                 'c-3pflo',
                 '8', '11', '8', '15', '15', '12',
+                'wizard',
+                'good-lawful',
             ],
             signers: [user1],
         });
-        const [result] = await safeExecuteScript({
-            name: 'get_rpg_character',
+        let [result] = await safeExecuteScript({
+            name: 'get_rpg_character_attributes',
             args: [user1, '/public/myExampleNFTCollectionV1', nftID],
         });
         expect(result).toEqual({
@@ -59,6 +61,24 @@ describe('cadence/contracts/FlowRPG', () => {
             intelligence: '15',
             wisdom: '15',
             charisma: '12',
+        });
+        [result] = await safeExecuteScript({
+            name: 'get_rpg_character_class',
+            args: [user1, '/public/myExampleNFTCollectionV1', nftID],
+        });
+        expect(result).toEqual({
+            name: 'Wizard',
+            description: 'to do ...',
+            bonuses: [
+                { rawValue: '3' },
+                { rawValue: '4' },
+            ],
+            savingThrows: [
+                { rawValue: '3' },
+            ],
+            attackAbilities: [
+                { rawValue: '2' },
+            ],
         });
     });
     it('panics if attribute > 15', async () => {
@@ -71,6 +91,8 @@ describe('cadence/contracts/FlowRPG', () => {
                     nftID,
                     'c-3pflo',
                     '8', '11', '8', '20', '15', '12',
+                    'wizard',
+                    'good-lawful',
                 ],
                 signers: [user1],
             }),
@@ -87,6 +109,8 @@ describe('cadence/contracts/FlowRPG', () => {
                     nftID,
                     'c-3pflo',
                     '1', '11', '8', '15', '15', '12',
+                    'wizard',
+                    'good-lawful',
                 ],
                 signers: [user1],
             }),
@@ -103,6 +127,8 @@ describe('cadence/contracts/FlowRPG', () => {
                     nftID,
                     'c-3pflo',
                     '8', '15', '8', '15', '15', '15',
+                    'wizard',
+                    'good-lawful',
                 ],
                 signers: [user1],
             }),
