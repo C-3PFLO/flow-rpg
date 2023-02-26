@@ -50,35 +50,36 @@ describe('cadence/contracts/FlowRPG', () => {
             ],
             signers: [user1],
         });
-        let [result] = await safeExecuteScript({
-            name: 'get_rpg_character_attributes',
+        const [result] = await safeExecuteScript({
+            name: 'get_rpg_character',
             args: [user1, '/public/myExampleNFTCollectionV1', nftID],
         });
         expect(result).toEqual({
-            strength: '8',
-            dexterity: '11',
-            constitution: '8',
-            intelligence: '15',
-            wisdom: '15',
-            charisma: '12',
-        });
-        [result] = await safeExecuteScript({
-            name: 'get_rpg_character_class',
-            args: [user1, '/public/myExampleNFTCollectionV1', nftID],
-        });
-        expect(result).toEqual({
-            name: 'Wizard',
-            description: 'to do ...',
-            bonuses: [
-                { rawValue: '3' },
-                { rawValue: '4' },
-            ],
-            savingThrows: [
-                { rawValue: '3' },
-            ],
-            attackAbilities: [
-                { rawValue: '2' },
-            ],
+            name: 'c-3pflo',
+            alignment: 'good-lawful',
+            classID: 'wizard',
+            class: {
+                name: 'Wizard',
+                description: 'to do ...',
+                bonuses: [
+                    { rawValue: '3' },
+                    { rawValue: '4' },
+                ],
+                savingThrows: [
+                    { rawValue: '3' },
+                ],
+                attackAbilities: [
+                    { rawValue: '2' },
+                ],
+            },
+            attributes: {
+                strength: '8',
+                dexterity: '11',
+                constitution: '8',
+                intelligence: '15',
+                wisdom: '15',
+                charisma: '12',
+            },
         });
     });
     it('panics if attribute > 15', async () => {

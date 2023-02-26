@@ -5,10 +5,17 @@ pub fun main(
         address: Address,
         collectionPublicPath: PublicPath,
         id: UInt64
-    ): FlowRPG.AttributePoints {
+    ): AnyStruct {
     let nft = getAccount(address)
         .getCapability(collectionPublicPath)
         .borrow<&{NonFungibleToken.CollectionPublic}>()!
         .borrowNFT(id: id)
-    return nft[FlowRPG.RPGCharacter]!.attributes;
+    let rpg = nft[FlowRPG.RPGCharacter]!
+    return {
+        "name": rpg.getName(),
+        "alignment": rpg.getAlignment(),
+        "classID": rpg.getClassID(),
+        "class": rpg.getClass(),
+        "attributes": rpg.getAttributes()
+    }
 }
