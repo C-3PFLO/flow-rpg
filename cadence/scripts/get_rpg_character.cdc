@@ -16,6 +16,7 @@ pub fun main(
         "alignment": rpg.getAlignment(),
         "classID": rpg.getClassID(),
         "class": rpg.getClass(),
-        "attributes": rpg.getAttributes()
+        "attributes": rpg.getAttributes(),
+        "hitPoints": rpg.getHitPoints()
     }
 }

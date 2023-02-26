@@ -188,14 +188,15 @@ pub contract FlowRPG {
             classID: String,
             alignment: String
         ) {
+            pre {
+                FlowRPG.classes[classID] != nil : "classID does not exist"
+            }
             FlowRPG.totalSupply = FlowRPG.totalSupply + 1
             self.name = name
             self.attributes = attributes
-            // TODO: validate classID in FlowRPG.classes
             self.classID = classID
             self.alignment = alignment
-            // TODO: get hitPoints from class instead
-            self.hitPoints = 10
+            self.hitPoints = FlowRPG.classes[classID]!.initialHitPoints
         }
     }
 

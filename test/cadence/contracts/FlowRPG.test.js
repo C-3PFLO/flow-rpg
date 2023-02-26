@@ -81,6 +81,7 @@ describe('cadence/contracts/FlowRPG', () => {
                 wisdom: '15',
                 charisma: '12',
             },
+            hitPoints: '6',
         });
     });
     xit('setName', async () => {
@@ -168,5 +169,23 @@ describe('cadence/contracts/FlowRPG', () => {
             }),
         );
         expect(error).toContain('exceeds maximum total points');
+    });
+    it('panics if classID not valid', async () => {
+        const [, error] = await shallRevert(
+            sendTransaction({
+                name: 'attach_rpg_character',
+                args: [
+                    '/storage/myExampleNFTCollectionV1',
+                    '/public/myExampleNFTCollectionV1',
+                    nftID,
+                    'c-3pflo',
+                    '8', '11', '8', '15', '15', '12',
+                    'not-a-class',
+                    'good-lawful',
+                ],
+                signers: [user1],
+            }),
+        );
+        expect(error).toContain('classID does not exist');
     });
 });
