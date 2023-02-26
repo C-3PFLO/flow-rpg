@@ -1,7 +1,11 @@
 import MyExampleNFT from "../contracts/MyExampleNFT.cdc"
 import NonFungibleToken from "../contracts/NonFungibleToken.cdc"
 
-transaction(recipient: Address, name: String, imageURL: String) {
+transaction(
+    recipient: Address,
+    name: String,
+    imageURL: String
+) {
 
     prepare(signer: AuthAccount) {
         let minter = 

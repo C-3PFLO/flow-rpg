@@ -4,7 +4,7 @@ import NonFungibleToken from "../contracts/NonFungibleToken.cdc"
 transaction(
     collectionStoragePath: StoragePath,
     itemID: UInt64,
-    name: String
+    delta: Int64
 ) {
 
     var rpg: &FlowRPG.RPGCharacter
@@ -18,7 +18,9 @@ transaction(
     }
 
     execute {
-        self.rpg.setName(name: name)
+        self.rpg.updateHitPoints(
+            delta: delta
+        )
     }
 }
  

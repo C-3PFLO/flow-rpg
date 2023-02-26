@@ -13,6 +13,8 @@ describe('cadence/contracts/FlowRPG', () => {
     let admin;
     let user1;
     let nftID;
+    let rpgArgs;
+
     beforeEach(async () => {
         admin = await getAccountAddress('admin');
         user1 = await getAccountAddress('user1');
@@ -33,21 +35,22 @@ describe('cadence/contracts/FlowRPG', () => {
             name: 'get_ids',
             args: [user1],
         });
+        // cache inputs for tests
         nftID = result[0];
+        rpgArgs = [
+            '/storage/myExampleNFTCollectionV1',
+            '/public/myExampleNFTCollectionV1',
+            nftID,
+            'c-3pflo',
+            '8', '11', '8', '15', '15', '12',
+            'sorcerer-v1',
+            'good-lawful',
+        ];
     });
     it('nominal', async () => {
-        // attach rpg character to it and inspect result
         await safeSendTransaction({
             name: 'attach_rpg_character',
-            args: [
-                '/storage/myExampleNFTCollectionV1',
-                '/public/myExampleNFTCollectionV1',
-                nftID,
-                'c-3pflo',
-                '8', '11', '8', '15', '15', '12',
-                'sorcerer-v1',
-                'good-lawful',
-            ],
+            args: rpgArgs,
             signers: [user1],
         });
         const [result] = await safeExecuteScript({
@@ -84,29 +87,18 @@ describe('cadence/contracts/FlowRPG', () => {
             hitPoints: '6',
         });
     });
-    xit('setName', async () => {
-        // attach rpg character to it and inspect result
+    it('setName', async () => {
         await safeSendTransaction({
             name: 'attach_rpg_character',
-            args: [
-                '/storage/myExampleNFTCollectionV1',
-                '/public/myExampleNFTCollectionV1',
-                nftID,
-                'c-3pflo',
-                '8', '11', '8', '15', '15', '12',
-                'wizard-v1',
-                'good-lawful',
-            ],
+            args: rpgArgs,
             signers: [user1],
         });
         await safeSendTransaction({
-            // TODO: write set_name
             name: 'set_name',
             args: [
                 '/storage/myExampleNFTCollectionV1',
-                '/public/myExampleNFTCollectionV1',
                 nftID,
-                'r2d2',
+                'R2D2',
             ],
             signers: [user1],
         });
@@ -114,78 +106,87 @@ describe('cadence/contracts/FlowRPG', () => {
             name: 'get_rpg_character',
             args: [user1, '/public/myExampleNFTCollectionV1', nftID],
         });
-        expect(result.name).toEqual('r2d2');
+        expect(result.name).toEqual('R2D2');
+    });
+    it('updateHitPoints', async () => {
+        await safeSendTransaction({
+            name: 'attach_rpg_character',
+            args: rpgArgs,
+            signers: [user1],
+        });
+        await safeSendTransaction({
+            name: 'update_hitpoints',
+            args: [
+                user1,
+                '/public/myExampleNFTCollectionV1',
+                nftID,
+                '-2',
+            ],
+            signers: [admin],
+        });
+        const [result] = await safeExecuteScript({
+            name: 'get_rpg_character',
+            args: [user1, '/public/myExampleNFTCollectionV1', nftID],
+        });
+        expect(result.hitPoints).toEqual('4');
     });
     it('panics if attribute > 15', async () => {
+        rpgArgs[7] = '16';
         const [, error] = await shallRevert(
             sendTransaction({
                 name: 'attach_rpg_character',
-                args: [
-                    '/storage/myExampleNFTCollectionV1',
-                    '/public/myExampleNFTCollectionV1',
-                    nftID,
-                    'c-3pflo',
-                    '8', '11', '8', '20', '15', '12',
-                    'wizard-v1',
-                    'good-lawful',
-                ],
+                args: rpgArgs,
                 signers: [user1],
             }),
         );
         expect(error).toContain('exceeds maximum initial value');
     });
     it('panics if attribute < 8', async () => {
+        rpgArgs[4] = '7';
         const [, error] = await shallRevert(
             sendTransaction({
                 name: 'attach_rpg_character',
-                args: [
-                    '/storage/myExampleNFTCollectionV1',
-                    '/public/myExampleNFTCollectionV1',
-                    nftID,
-                    'c-3pflo',
-                    '1', '11', '8', '15', '15', '12',
-                    'wizard-v1',
-                    'good-lawful',
-                ],
+                args: rpgArgs,
                 signers: [user1],
             }),
         );
         expect(error).toContain('less than minimum initial value');
     });
     it('panics if total points > 27', async () => {
+        rpgArgs[5] = '15';
+        rpgArgs[9] = '15';
         const [, error] = await shallRevert(
             sendTransaction({
                 name: 'attach_rpg_character',
-                args: [
-                    '/storage/myExampleNFTCollectionV1',
-                    '/public/myExampleNFTCollectionV1',
-                    nftID,
-                    'c-3pflo',
-                    '8', '15', '8', '15', '15', '15',
-                    'wizard-v1',
-                    'good-lawful',
-                ],
+                args: rpgArgs,
                 signers: [user1],
             }),
         );
         expect(error).toContain('exceeds maximum total points');
     });
     it('panics if classID not valid', async () => {
+        rpgArgs[10] = 'not-a-class';
         const [, error] = await shallRevert(
             sendTransaction({
                 name: 'attach_rpg_character',
-                args: [
-                    '/storage/myExampleNFTCollectionV1',
-                    '/public/myExampleNFTCollectionV1',
-                    nftID,
-                    'c-3pflo',
-                    '8', '11', '8', '15', '15', '12',
-                    'not-a-class',
-                    'good-lawful',
-                ],
+                args: rpgArgs,
                 signers: [user1],
             }),
         );
         expect(error).toContain('classID does not exist');
+    });
+    it('panics on updateHitPoints', async () => {
+        const [, error] = await shallRevert(
+            sendTransaction({
+                name: 'user_update_hitpoints_panics',
+                args: [
+                    '/storage/myExampleNFTCollectionV1',
+                    nftID,
+                    '-4',
+                ],
+                signers: [user1],
+            }),
+        );
+        expect(error).toContain('function has contract access');
     });
 });
