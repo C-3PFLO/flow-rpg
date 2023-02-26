@@ -105,18 +105,21 @@ pub contract FlowRPG {
         pub let bonuses: [Attribute]
         pub let savingThrows: [Attribute]
         pub let attackAbilities: [AttackAbility]
+        pub let initialHitPoints: UInt64
         init(
             name: String,
             description: String,
             bonuses: [Attribute],
             savingThrows: [Attribute],
-            attackAbilities: [AttackAbility]
+            attackAbilities: [AttackAbility],
+            initialHitPoints: UInt64
         ) {
             self.name = name
             self.description = description
             self.bonuses = bonuses
             self.savingThrows = savingThrows
             self.attackAbilities = attackAbilities
+            self.initialHitPoints = initialHitPoints
         }
     }
 
@@ -139,11 +142,7 @@ pub contract FlowRPG {
         pub fun setName(name: String)
     }
 
-    pub resource interface Admin {
-        access(contract) fun updateHitPoints(delta: UInt64)
-    }
-
-    pub attachment RPGCharacter for NonFungibleToken.INFT: Public, Private, Admin {
+    pub attachment RPGCharacter for NonFungibleToken.INFT: Public, Private {
         pub var name: String
         pub let classID: String
         pub let alignment: String
@@ -178,6 +177,7 @@ pub contract FlowRPG {
             return self.hitPoints
         }
 
+        // Admin only
         access(contract) fun updateHitPoints(delta: UInt64) {
             self.hitPoints = self.hitPoints + delta
         }
@@ -191,8 +191,10 @@ pub contract FlowRPG {
             FlowRPG.totalSupply = FlowRPG.totalSupply + 1
             self.name = name
             self.attributes = attributes
+            // TODO: validate classID in FlowRPG.classes
             self.classID = classID
             self.alignment = alignment
+            // TODO: get hitPoints from class instead
             self.hitPoints = 10
         }
     }
@@ -208,8 +210,7 @@ pub contract FlowRPG {
         name: String,
         attributes: AttributePoints,
         classID: String,
-        alignment: String
-    ): @{NonFungibleToken.INFT} {
+        alignment: String ): @{NonFungibleToken.INFT} {
         emit Minted() // TODO
         return <- attach RPGCharacter(
             name: name,
@@ -220,8 +221,30 @@ pub contract FlowRPG {
     }
 
     pub resource GameKeeper {
+        // TODO: test that this is only accessible by GameKeeper
         pub fun updateHitPoints(char: &FlowRPG.RPGCharacter, delta: UInt64) {
             char.updateHitPoints(delta: delta)
+        }
+        // TODO: test
+        pub fun addClass(
+            classID: String,
+            name: String,
+            description: String,
+            bonuses: [Attribute],
+            savingThrows: [Attribute],
+            attackAbilities: [AttackAbility],
+            initialHitPoints: UInt64 ) {
+            pre {
+                FlowRPG.classes[classID] == nil : "classID exists"
+            }
+            FlowRPG.classes[classID] = FlowRPG.Class(
+                name: name,
+                description: description,
+                bonuses: bonuses,
+                savingThrows: savingThrows,
+                attackAbilities: attackAbilities,
+                initialHitPoints: initialHitPoints
+            )
         }
         pub fun createGameKeeper(): @GameKeeper {
             return <- create GameKeeper()
@@ -234,41 +257,47 @@ pub contract FlowRPG {
         self.GameKeeperStoragePath = /storage/FlowRPGGameKeeperV1
         self.account.save(<- create GameKeeper(), to: self.GameKeeperStoragePath)
 
+        // TODO: move to a startup transaction
         self.classes = {
-            "wizard": FlowRPG.Class(
+            "wizard-v1": FlowRPG.Class(
                 name: "Wizard",
-                description: "to do ...",
+                description: "... to do ...",
                 bonuses: [Attribute.intelligence, Attribute.wisdom],
                 savingThrows: [Attribute.intelligence],
-                attackAbilities: [AttackAbility.spell]
+                attackAbilities: [AttackAbility.spell],
+                initialHitPoints: 8
             ),
-            "sorcerer": FlowRPG.Class(
+            "sorcerer-v1": FlowRPG.Class(
                 name: "Sorcerer",
-                description: "to do ...",
+                description: "... to do ...",
                 bonuses: [Attribute.charisma, Attribute.intelligence],
-                savingThrows: [Attribute.constitution],
-                attackAbilities: [AttackAbility.spell]
+                savingThrows: [Attribute.charisma],
+                attackAbilities: [AttackAbility.spell],
+                initialHitPoints: 6
             ),
-            "barbarian": FlowRPG.Class(
+            "barbarian-v1": FlowRPG.Class(
                 name: "Barbarian",
-                description: "to do ...",
+                description: "... to do ...",
                 bonuses: [Attribute.strength, Attribute.constitution],
                 savingThrows: [Attribute.strength],
-                attackAbilities: [AttackAbility.melee]
+                attackAbilities: [AttackAbility.melee],
+                initialHitPoints: 14
             ),
-            "ranger": FlowRPG.Class(
+            "ranger-v1": FlowRPG.Class(
                 name: "Ranger",
-                description: "to do ...",
+                description: "... to do ...",
                 bonuses: [Attribute.dexterity, Attribute.constitution],
                 savingThrows: [Attribute.dexterity],
-                attackAbilities: [AttackAbility.ranged]
+                attackAbilities: [AttackAbility.ranged],
+                initialHitPoints: 10
             ),
-            "rogue": FlowRPG.Class(
+            "rogue-v1": FlowRPG.Class(
                 name: "Rogue",
-                description: "to do ...",
-                bonuses: [Attribute.dexterity],
+                description: "... to do ...",
+                bonuses: [Attribute.dexterity, Attribute.strength],
                 savingThrows: [Attribute.dexterity],
-                attackAbilities: [AttackAbility.melee, AttackAbility.ranged]
+                attackAbilities: [AttackAbility.melee, AttackAbility.ranged],
+                initialHitPoints: 12
             )
         }
 
