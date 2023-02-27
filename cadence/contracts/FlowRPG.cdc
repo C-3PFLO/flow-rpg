@@ -31,7 +31,8 @@ pub contract FlowRPG {
         constitution: UInt64,
         intelligence: UInt64,
         wisdom: UInt64,
-        charisma: UInt64) : UInt64 {
+        charisma: UInt64) : UInt64
+        {
         let pointCost: {UInt64: UInt64} = {
             8: 0, 9: 1, 10: 2, 11: 3, 12: 4, 13: 5, 14: 7, 15: 9
         }
@@ -62,7 +63,7 @@ pub contract FlowRPG {
             intelligence: UInt64,
             wisdom: UInt64,
             charisma: UInt64,
-        ) {
+            ) {
             // attributes must follow point-buy rules during initialization
             // https://www.dndbeyond.com/sources/basic-rules/step-by-step-characters#3DetermineAbilityScores
             pre {
@@ -113,7 +114,7 @@ pub contract FlowRPG {
             savingThrows: [Attribute],
             attackAbilities: [AttackAbility],
             initialHitPoints: Int64
-        ) {
+            ) {
             self.name = name
             self.description = description
             self.bonuses = bonuses
@@ -157,7 +158,8 @@ pub contract FlowRPG {
             classID: String,
             class: FlowRPG.Class,
             attributes: AttributePoints,
-            hitPoints: Int64 ) {
+            hitPoints: Int64
+            ) {
             self.name = name
             self.alignment = alignment
             self.classID = classID
@@ -250,7 +252,8 @@ pub contract FlowRPG {
             name: String,
             alignment: String,
             classID: String,
-            attributes: AttributePoints ) {
+            attributes: AttributePoints
+            ) {
             pre {
                 FlowRPG.classes[classID] != nil : "classID does not exist"
             }
@@ -275,7 +278,8 @@ pub contract FlowRPG {
         name: String,
         alignment: String,
         classID: String,
-        attributes: AttributePoints ): @{NonFungibleToken.INFT} {
+        attributes: AttributePoints
+        ): @{NonFungibleToken.INFT} {
         emit Minted() // TODO
         return <- attach RPGCharacter(
             name: name,

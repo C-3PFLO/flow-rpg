@@ -16,6 +16,7 @@ beforeEach(async () => {
     await emulator.start();
     // Deploy
     const admin = await getAccountAddress('admin');
+    await safeDeployContractByName({ to: admin, name: 'FungibleToken' });
     await safeDeployContractByName({ to: admin, name: 'NonFungibleToken' });
     await safeDeployContractByName({ to: admin, name: 'MetadataViews' });
     await safeDeployContractByName({ to: admin, name: 'FlowRPG' });
