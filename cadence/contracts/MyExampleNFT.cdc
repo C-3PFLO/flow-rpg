@@ -24,16 +24,18 @@ pub contract MyExampleNFT: NonFungibleToken {
         }
 
         pub fun resolveView(_ type: Type): AnyStruct? {
-            if type == Type<MetadataViews.Display>() {
-                return MetadataViews.Display(
-                    name: self.name,
-                    description: "",
-                    thumbnail: MetadataViews.HTTPFile(
-                        url: self.imageURL
+            switch type {
+                case Type<MetadataViews.Display>():
+                    return MetadataViews.Display(
+                        name: self.name,
+                        description: "",
+                        thumbnail: MetadataViews.HTTPFile(
+                            url: self.imageURL
+                        )
                     )
-                )
+                default:
+                    return nil
             }
-            return nil
         }
 
         init(_name: String, _imageURL: String) {

@@ -27,7 +27,7 @@ describe('cadence/contracts/FlowRPG', () => {
         // mint nft as admin, deposit to user1
         await safeSendTransaction({
             name: 'mint_example',
-            args: [user1, 'my-new-nft', '3'],
+            args: [user1, 'my-new-nft', 'http://url-to-somewhere/my-new-nft.png'],
             signers: [admin],
         });
         // get handle on newly created nft
@@ -42,9 +42,9 @@ describe('cadence/contracts/FlowRPG', () => {
             '/public/myExampleNFTCollectionV1',
             nftID,
             'c-3pflo',
-            '8', '11', '8', '15', '15', '12',
-            'sorcerer-v1',
             'good-lawful',
+            'sorcerer-v1',
+            '8', '11', '8', '15', '15', '12',
         ];
     });
     it('nominal', async () => {
@@ -85,6 +85,19 @@ describe('cadence/contracts/FlowRPG', () => {
                 charisma: '12',
             },
             hitPoints: '6',
+        });
+        const [display] = await safeExecuteScript({
+            name: 'get_rpg_character_display',
+            args: [user1, '/public/myExampleNFTCollectionV1', nftID],
+        });
+        expect(display).toEqual({
+            name: 'c-3pflo',
+            description: '... to do ...',
+            thumbnail: {
+                // TODO
+                // url: 'http://url-to-somewhere/my-new-nft.png',
+                url: '',
+            },
         });
     });
     it('setName', async () => {
@@ -131,7 +144,7 @@ describe('cadence/contracts/FlowRPG', () => {
         expect(result.hitPoints).toEqual('4');
     });
     it('panics if attribute > 15', async () => {
-        rpgArgs[7] = '16';
+        rpgArgs[9] = '16';
         const [, error] = await shallRevert(
             sendTransaction({
                 name: 'attach_rpg_character',
@@ -142,7 +155,7 @@ describe('cadence/contracts/FlowRPG', () => {
         expect(error).toContain('exceeds maximum initial value');
     });
     it('panics if attribute < 8', async () => {
-        rpgArgs[4] = '7';
+        rpgArgs[6] = '7';
         const [, error] = await shallRevert(
             sendTransaction({
                 name: 'attach_rpg_character',
@@ -153,8 +166,8 @@ describe('cadence/contracts/FlowRPG', () => {
         expect(error).toContain('less than minimum initial value');
     });
     it('panics if total points > 27', async () => {
-        rpgArgs[5] = '15';
-        rpgArgs[9] = '15';
+        rpgArgs[7] = '15';
+        rpgArgs[11] = '15';
         const [, error] = await shallRevert(
             sendTransaction({
                 name: 'attach_rpg_character',
@@ -165,7 +178,7 @@ describe('cadence/contracts/FlowRPG', () => {
         expect(error).toContain('exceeds maximum total points');
     });
     it('panics if classID not valid', async () => {
-        rpgArgs[10] = 'not-a-class';
+        rpgArgs[5] = 'not-a-class';
         const [, error] = await shallRevert(
             sendTransaction({
                 name: 'attach_rpg_character',

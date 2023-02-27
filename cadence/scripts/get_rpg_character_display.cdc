@@ -1,5 +1,6 @@
 import FlowRPG from "../contracts/FlowRPG.cdc"
 import NonFungibleToken from "../contracts/NonFungibleToken.cdc"
+import MetadataViews from "./MetadataViews.cdc"
 
 pub fun main(
         address: Address,
@@ -12,6 +13,6 @@ pub fun main(
         .borrowNFT(id: id)
     let rpg = nft[FlowRPG.RPGCharacter]!
     return rpg.resolveView(
-        Type<FlowRPG.RPGCharacterView>()
+        Type<MetadataViews.Display>()
     )
 }
