@@ -17,6 +17,7 @@ beforeEach(async () => {
     // Deploy
     const admin = await getAccountAddress('admin');
     await safeDeployContractByName({ to: admin, name: 'NonFungibleToken' });
+    await safeDeployContractByName({ to: admin, name: 'MetadataViews' });
     await safeDeployContractByName({ to: admin, name: 'FlowRPG' });
     await safeDeployContractByName({ to: admin, name: 'MyExampleNFT' });
 });

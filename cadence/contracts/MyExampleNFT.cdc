@@ -1,4 +1,5 @@
 import NonFungibleToken from "./NonFungibleToken.cdc"
+import MetadataViews from "./MetadataViews.cdc"
 
 pub contract MyExampleNFT: NonFungibleToken {
 
@@ -11,10 +12,29 @@ pub contract MyExampleNFT: NonFungibleToken {
     pub event Withdraw(id: UInt64, from: Address?)
     pub event Deposit(id: UInt64, to: Address?)
 
-    pub resource NFT: NonFungibleToken.INFT {
+    pub resource NFT: NonFungibleToken.INFT, MetadataViews.Resolver {
         pub let id: UInt64
         pub let name: String
         pub let imageURL: String
+
+        pub fun getViews() : [Type] {
+            var views: [Type]=[]
+            views.append(Type<MetadataViews.Display>())
+            return views
+        }
+
+        pub fun resolveView(_ type: Type): AnyStruct? {
+            if type == Type<MetadataViews.Display>() {
+                return MetadataViews.Display(
+                    name: self.name,
+                    description: "",
+                    thumbnail: MetadataViews.HTTPFile(
+                        url: self.imageURL
+                    )
+                )
+            }
+            return nil
+        }
 
         init(_name: String, _imageURL: String) {
             self.id = self.uuid
