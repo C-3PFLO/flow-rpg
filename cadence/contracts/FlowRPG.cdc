@@ -1,4 +1,5 @@
 import NonFungibleToken from "./NonFungibleToken.cdc"
+import MetadataViews from "./MetadataViews.cdc"
 
 pub contract FlowRPG {
 
@@ -30,8 +31,7 @@ pub contract FlowRPG {
         constitution: UInt64,
         intelligence: UInt64,
         wisdom: UInt64,
-        charisma: UInt64,
-    ) : UInt64 {
+        charisma: UInt64) : UInt64 {
         let pointCost: {UInt64: UInt64} = {
             8: 0, 9: 1, 10: 2, 11: 3, 12: 4, 13: 5, 14: 7, 15: 9
         }
@@ -142,19 +142,41 @@ pub contract FlowRPG {
         pub fun setName(name: String)
     }
 
-    pub attachment RPGCharacter for NonFungibleToken.INFT: Public, Private {
-        pub var name: String
-        pub let classID: String
+    // Custom MetadataView
+    pub struct RPGCharacterView {
+        pub let name: String
         pub let alignment: String
+        pub let classID: String
+        pub let class: FlowRPG.Class
+        pub let attributes: AttributePoints
+        pub let hitPoints: Int64
+
+        init(
+            name: String,
+            alignment: String,
+            classID: String,
+            class: FlowRPG.Class,
+            attributes: AttributePoints,
+            hitPoints: Int64 ) {
+            self.name = name
+            self.alignment = alignment
+            self.classID = classID
+            self.class = class
+            self.attributes = attributes
+            self.hitPoints = hitPoints
+        }
+    }
+
+    pub attachment RPGCharacter for NonFungibleToken.INFT: Public, Private, MetadataViews.Resolver {
+        pub var name: String
+        pub let alignment: String
+        pub let classID: String
         pub let attributes: AttributePoints
         pub var hitPoints: Int64
 
+        // Public
         pub fun getName(): String {
             return self.name
-        }
-
-        pub fun setName(name: String) {
-            self.name = name
         }
 
         pub fun getClassID(): String {
@@ -177,6 +199,48 @@ pub contract FlowRPG {
             return self.hitPoints
         }
 
+        // Private
+        pub fun setName(name: String) {
+            self.name = name
+        }
+
+        // Resolver
+        pub fun getViews() : [Type] {
+            var views : [Type]=[]
+            // TODO: relay base views
+            views.append(Type<MetadataViews.Display>())
+            views.append(Type<FlowRPG.RPGCharacterView>())
+            // TODO: additional views
+            return views
+        }
+
+        pub fun resolveView(_ type: Type): AnyStruct? {
+            let class = self.getClass()
+            switch type {
+                case Type<MetadataViews.Display>():
+                    return MetadataViews.Display(
+                        name: self.getName(),
+                        // TODO: use class description as a placeholder
+                        description: class == nil ? "" : class.description,
+                        // TODO: get from base when provided
+                        thumbnail: MetadataViews.HTTPFile(
+                            url: ""
+                        )
+                    )
+                case Type<FlowRPG.RPGCharacterView>():
+                    return FlowRPG.RPGCharacterView(
+                        name: self.getName(),
+                        alignment: self.getAlignment(),
+                        classID: self.getClassID(),
+                        class: self.getClass(),
+                        attributes: self.getAttributes(),
+                        hitPoints: self.getHitPoints()
+                    )
+                default:
+                    return nil
+            }
+        }
+
         // Admin only
         access(contract) fun updateHitPoints(delta: Int64) {
             self.hitPoints = self.hitPoints + delta
@@ -184,18 +248,17 @@ pub contract FlowRPG {
 
         init(
             name: String,
-            attributes: AttributePoints,
+            alignment: String,
             classID: String,
-            alignment: String
-        ) {
+            attributes: AttributePoints ) {
             pre {
                 FlowRPG.classes[classID] != nil : "classID does not exist"
             }
             FlowRPG.totalSupply = FlowRPG.totalSupply + 1
             self.name = name
-            self.attributes = attributes
-            self.classID = classID
             self.alignment = alignment
+            self.classID = classID
+            self.attributes = attributes
             self.hitPoints = FlowRPG.classes[classID]!.initialHitPoints
         }
     }
@@ -204,20 +267,21 @@ pub contract FlowRPG {
     // and an attachment must be created in the statement where it is attached
     // thus we cannot use something like a minter pattern, where
     // only an admin user can mint an RPGCharacter and send it to users
+    // 
     // if this were to be gated or monetized, that would have to happen
     // within this public function
     pub fun attachRPGCharacter(
         nft: @{NonFungibleToken.INFT},
         name: String,
-        attributes: AttributePoints,
+        alignment: String,
         classID: String,
-        alignment: String ): @{NonFungibleToken.INFT} {
+        attributes: AttributePoints ): @{NonFungibleToken.INFT} {
         emit Minted() // TODO
         return <- attach RPGCharacter(
             name: name,
-            attributes: attributes,
+            alignment: alignment,
             classID: classID,
-            alignment: alignment
+            attributes: attributes
         ) to <- nft
     }
 

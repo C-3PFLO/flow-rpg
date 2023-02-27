@@ -30,16 +30,21 @@ describe('cadence/contracts/MyExampleNFT', () => {
             args: [user1, 'another-nft', 'my-url-2'],
             signers: [admin],
         });
-        const [result] = await safeExecuteScript({
+        const [ids] = await safeExecuteScript({
             name: 'get_ids',
             args: [user1],
         });
-        expect(result.length).toEqual(2);
-        // [result] = await safeExecuteScript({
-        //     name: 'get_nft',
-        //     args: [user1, result[0]],
-        // });
-        // expect(result.name).toEqual('another-nft');
-        // expect(result.imageURL).toEqual('my-url-2');
+        expect(ids.length).toEqual(2);
+        const [nft] = await safeExecuteScript({
+            name: 'get_nft',
+            args: [user1, ids[1]],
+        });
+        expect(nft).toEqual({
+            name: 'another-nft',
+            description: '',
+            thumbnail: {
+                url: 'my-url-2',
+            },
+        });
     });
 });
