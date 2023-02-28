@@ -7,6 +7,7 @@ const initialState = {
     error: null,
     account: null,
     selectedCollectionItem: null,
+    builderIsOpen: false,
 };
 
 /**
@@ -43,6 +44,17 @@ export function reduce(state = initialState, action) {
         return {
             ...state,
             selectedCollectionItem: action.payload,
+        };
+    case ActionTypes.TOGGLE_BUILDER:
+        return {
+            ...state,
+            builderIsOpen: !state.builderIsOpen,
+        };
+    case ActionTypes.ATTACH_RPG_CHARACTER + AsyncStatus.SUCCESS:
+    case ActionTypes.ATTACH_RPG_CHARACTER + AsyncStatus.FAILURE:
+        return {
+            ...state,
+            builderIsOpen: false,
         };
     case ActionTypes.LOGOUT:
         return initialState;

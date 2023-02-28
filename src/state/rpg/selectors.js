@@ -102,10 +102,14 @@ export function getAttributes(state) {
  * @public
  * @param {Object} state
  * @param {String} attribute
- * @return {Object}
+ * @return {String}
  */
 export function getModifierForAttribute(state, attribute) {
     const attributes = getAttributes(state);
-    return attributes && attributes[attribute] ?
+    let modifier = attributes && attributes[attribute] ?
         Math.trunc((attributes[attribute] - 10)/2) : null;
+    if (modifier && modifier > 0) {
+        modifier = '+' + modifier;
+    }
+    return modifier;
 }

@@ -21,7 +21,7 @@ export function Character() {
                 <div className="character-header">
                     <img src={image} className="profile"></img>
                     <div className='character-basics'>
-                        <div className='character-basics-row'>
+                        <div className='character-basics-row character-basics-row-labels'>
                             <label>Name</label>
                             <label>Description</label>
                             <label>Class</label>

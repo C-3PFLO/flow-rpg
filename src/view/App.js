@@ -3,6 +3,7 @@ import React from 'react';
 import { Login } from './Login';
 import { Collection } from './Collection';
 import { Character } from './Character';
+import { Builder } from './Builder';
 
 import './styles.css';
 
@@ -21,6 +22,7 @@ export function App() {
             <Login/>
             <Collection/>
             <Character/>
+            <Builder/>
         </>
     );
 }

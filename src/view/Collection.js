@@ -68,16 +68,7 @@ export function Collection() {
             <section hidden={!selectedCollectionItem}>
                 <button
                     disabled={useSelector(rpg.getPending)}
-                    onClick={() => dispatch(rpg.attachRPGCharacterAndFetch(
-                        address,
-                        selectedCollectionItem.data.storagePath,
-                        selectedCollectionItem.data.publicPath,
-                        selectedCollectionItem.id,
-                        'C-3PFLO',
-                        'good-lawful',
-                        'sorcerer-v1',
-                        '8', '11', '8', '15', '15', '12',
-                    ))}>
+                    onClick={() => dispatch(app.toggleBuilder())}>
                     Attach RPG Character
                 </button>
             </section>

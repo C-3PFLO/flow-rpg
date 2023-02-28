@@ -3,13 +3,13 @@ body {
 }
 
 section {
-    margin-bottom: 16px;
+    margin-bottom: 36px;
 }
 
 .character {
     display: flex;
     flex-direction: column;
-    max-width: 500px;
+    max-width: 700px;
 }
 
 .character-header {
@@ -20,20 +20,26 @@ section {
 .character-basics {
     display: flex;
     flex-direction: row;
+    flex: 1;
 }
 
 .character-basics-row {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    flex: 1;
     padding-left: 16px;
+    max-width: 600px;
+}
+
+.character-basics-row-labels {
+    flex: 0;
 }
 
 .character-basics-row > * {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    max-width: 600px;
 }
 
 label {
@@ -100,4 +106,33 @@ label {
 .charisma {
     color: #1A237E;
     border: #1A237E 2px solid;
+}
+
+.character-builder {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.character-basics > input, .character-basics > select {
+    font: 16px 'Courier New', Courier, monospace;
+}
+
+.character-attribute > input, .character-attribute > select {
+    font: 32px 'Courier New', Courier, monospace;
+}
+
+.character-builder-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+}
+
+.character-builder-actions > * {
+    margin-left: 16px;
+}
+
+.close {
+    float: right;
 }

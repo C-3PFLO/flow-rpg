@@ -9,3 +9,4 @@ flow transactions send ./cadence/transactions/mint_example.cdc --signer default 
 flow transactions send ./cadence/transactions/mint_example.cdc --signer default f8d6e0586b0a20c7 flovatar-5957 https://flovatar.com/api/image/5957
 flow transactions send ./cadence/transactions/mint_example.cdc --signer default f8d6e0586b0a20c7 flovatar-5662 https://flovatar.com/api/image/5662
 flow transactions send ./cadence/transactions/mint_example.cdc --signer default f8d6e0586b0a20c7 piggo-7802 https://ik.imagekit.io/xyvsisxky/tr:w-600/https://s3.us-west-2.amazonaws.com/crypto-piggo.nft/piggo-7802.png
+flow transactions send ./cadence/transactions/mint_example.cdc --signer default f8d6e0586b0a20c7 flovatar-2861 https://flovatar.com/api/image/2861
