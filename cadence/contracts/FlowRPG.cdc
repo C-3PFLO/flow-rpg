@@ -169,7 +169,9 @@ pub contract FlowRPG {
         }
     }
 
-    pub attachment RPGCharacter for NonFungibleToken.INFT: Public, Private, MetadataViews.Resolver {
+    pub attachment RPGCharacter for NonFungibleToken.INFT: Public,
+                                                           Private,
+                                                           MetadataViews.Resolver {
         pub var name: String
         pub let alignment: String
         pub let classID: String

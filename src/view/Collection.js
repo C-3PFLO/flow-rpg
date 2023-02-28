@@ -48,7 +48,7 @@ export function Collection() {
     const images = useSelector(collections.getCollections).map(mapToDisplay).flat();
 
     return (
-        <section id="collection-browser" hidden={!useSelector(app.isLoggedIn)}>
+        <section hidden={!useSelector(app.isLoggedIn)}>
             <h3>Collection</h3>
             <section>
                 <button
@@ -80,10 +80,6 @@ export function Collection() {
                     ))}>
                     Attach RPG Character
                 </button>
-            </section>
-            <section hidden={!useSelector(rpg.getInitialized)}>
-                <h3>Flow RPG Character</h3>
-                <span>{useSelector((state) => JSON.stringify(rpg.getCharacter(state), null, 2))}</span>
             </section>
         </section>
     );
