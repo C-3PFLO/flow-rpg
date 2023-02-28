@@ -1,6 +1,6 @@
 /**
  * @public
- * @param {Object} state current state
+ * @param {Object} state
  * @return {Object} state
  */
 export function getState(state) {
@@ -10,8 +10,8 @@ export function getState(state) {
 
 /**
  * @public
- * @param {Object} state current state
- * @return {Object} state
+ * @param {Object} state
+ * @return {Boolean}
  */
 export function getInitialized(state) {
     const rpg = getState(state);
@@ -20,8 +20,8 @@ export function getInitialized(state) {
 
 /**
  * @public
- * @param {Object} state current state
- * @return {Object} state
+ * @param {Object} state
+ * @return {Boolean}
  */
 export function getPending(state) {
     const rpg = getState(state);
@@ -30,10 +30,82 @@ export function getPending(state) {
 
 /**
  * @public
- * @param {Object} state current state
- * @return {Object} state
+ * @param {Object} state
+ * @return {Object}
  */
 export function getCharacter(state) {
     const rpg = getState(state);
     return rpg ? rpg.character : null;
+}
+
+/**
+ * @public
+ * @param {Object} state
+ * @return {String}
+ */
+export function getName(state) {
+    const character = getCharacter(state);
+    return character ? character.name : null;
+}
+
+/**
+ * @public
+ * @param {Object} state
+ * @return {String}
+ */
+export function getAlignment(state) {
+    const character = getCharacter(state);
+    return character ? character.alignment : null;
+}
+
+/**
+ * @public
+ * @param {Object} state
+ * @return {Object}
+ */
+export function getClass(state) {
+    const character = getCharacter(state);
+    return character ? character.class : null;
+}
+
+/**
+ * @public
+ * @param {Object} state
+ * @return {String}
+ */
+export function getClassName(state) {
+    const characterClass = getClass(state);
+    return characterClass ? characterClass.name : null;
+}
+
+/**
+ * @public
+ * @param {Object} state
+ * @return {String}
+ */
+export function getClassDescription(state) {
+    const characterClass = getClass(state);
+    return characterClass ? characterClass.description : null;
+}
+
+/**
+ * @public
+ * @param {Object} state
+ * @return {Object}
+ */
+export function getAttributes(state) {
+    const character = getCharacter(state);
+    return character ? character.attributes : null;
+}
+
+/**
+ * @public
+ * @param {Object} state
+ * @param {String} attribute
+ * @return {Object}
+ */
+export function getModifierForAttribute(state, attribute) {
+    const attributes = getAttributes(state);
+    return attributes && attributes[attribute] ?
+        Math.trunc((attributes[attribute] - 10)/2) : null;
 }

@@ -5,3 +5,99 @@ body {
 section {
     margin-bottom: 16px;
 }
+
+.character {
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+}
+
+.character-header {
+    display: flex;
+    flex-direction: row;
+}
+
+.character-basics {
+    display: flex;
+    flex-direction: row;
+}
+
+.character-basics-row {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-left: 16px;
+}
+
+.character-basics-row > * {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 600px;
+}
+
+label {
+    opacity: 0.3;
+}
+
+.profile {
+    width: 128px;
+    height: 128px;
+}
+
+.character-attributes {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.character-attribute {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.character-attribute-value {
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    padding: 8px;
+    margin-bottom: 8px;
+    text-align: center;
+    background: white;
+    font: 32px 'Courier New', Courier, monospace;
+}
+
+.character-attribute-label {
+    font: 16px 'Courier New', Courier, monospace;
+}
+
+.strength {
+    color: #B71C1C;
+    border: #B71C1C 2px solid;
+}
+
+.dexterity {
+    color: #1A237E;
+    border: #1A237E 2px solid;
+}
+
+.constitution {
+    color: #B71C1C;
+    border: #B71C1C 2px solid;
+}
+
+.intelligence {
+    color: #1B5E20;
+    border: #1B5E20 2px solid;
+}
+
+.wisdom {
+    color: #1B5E20;
+    border: #1B5E20 2px solid;
+}
+
+.charisma {
+    color: #1A237E;
+    border: #1A237E 2px solid;
+}
