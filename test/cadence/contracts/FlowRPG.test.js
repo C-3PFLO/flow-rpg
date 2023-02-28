@@ -66,7 +66,7 @@ describe('cadence/contracts/FlowRPG', () => {
             classID: 'sorcerer-v1',
             class: {
                 name: 'Sorcerer',
-                description: '... to do ...',
+                description: 'Sorcerers carry a magical birthright conferred upon them by an exotic bloodline, some otherworldly influence, or exposure to unknown cosmic forces. No one chooses sorcery; the power chooses the sorcerer.',
                 bonuses: [
                     { rawValue: '5' },
                     { rawValue: '3' },
@@ -95,7 +95,7 @@ describe('cadence/contracts/FlowRPG', () => {
         });
         expect(display).toEqual({
             name: 'c-3pflo',
-            description: '... to do ...',
+            description: 'Sorcerers carry a magical birthright conferred upon them by an exotic bloodline, some otherworldly influence, or exposure to unknown cosmic forces. No one chooses sorcery; the power chooses the sorcerer.',
             thumbnail: {
                 // TODO
                 // url: 'http://url-to-somewhere/my-new-nft.png',
