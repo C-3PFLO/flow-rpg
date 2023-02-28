@@ -33,3 +33,15 @@ export function logout() {
         type: ActionTypes.LOGOUT,
     };
 }
+
+/**
+ * @public
+ * @param {Object} item
+ * @return {Object} action
+ */
+export function setSelectedCollectionItem(item) {
+    return {
+        type: ActionTypes.SET_SELECTED_COLLECTION_ITEM,
+        payload: item,
+    };
+}

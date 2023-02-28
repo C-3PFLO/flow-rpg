@@ -6,7 +6,7 @@ import * as fcl from '@onflow/fcl';
 * @param {String} address
 * @return {Promise}
 */
-export function getAllNFTs(address) {
+export function fetchCollections(address) {
     const cadence = `
         import NonFungibleToken from 0xAdmin
         

@@ -115,7 +115,7 @@ export function attachRPGCharacter(
 * @param {Integer} itemID
 * @return {Promise}
 */
-export function getRPGCharacter(address, collectionPublicPath, itemID) {
+export function fetchRPGCharacter(address, collectionPublicPath, itemID) {
     const cadence = `
         import FlowRPG from 0xAdmin
         import NonFungibleToken from 0xAdmin

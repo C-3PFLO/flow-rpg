@@ -5,7 +5,7 @@ const initialState = {
     initialized: false,
     pending: false,
     error: null,
-    nfts: null,
+    items: [],
 };
 
 /**
@@ -17,19 +17,19 @@ const initialState = {
  */
 export function reduce(state = initialState, action) {
     switch (action.type) {
-    case ActionTypes.GET_ALL_NFTS + AsyncStatus.PENDING:
+    case ActionTypes.FETCH_COLLECTIONS + AsyncStatus.PENDING:
         return {
             ...state,
             pending: true,
         };
-    case ActionTypes.GET_ALL_NFTS + AsyncStatus.SUCCESS:
+    case ActionTypes.FETCH_COLLECTIONS + AsyncStatus.SUCCESS:
         return {
             ...state,
             pending: false,
             initialized: true,
-            nfts: action.payload,
+            items: action.payload,
         };
-    case ActionTypes.GET_ALL_NFTS + AsyncStatus.FAILURE:
+    case ActionTypes.FETCH_COLLECTIONS + AsyncStatus.FAILURE:
         return {
             ...state,
             pending: false,

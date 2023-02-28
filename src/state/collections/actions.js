@@ -6,9 +6,9 @@ import * as collections from '../../fcl/collections';
  * @param {String} address
  * @return {Object} action
  */
-export function fetchAllNFTs(address) {
+export function fetchCollections(address) {
     return {
-        type: ActionTypes.GET_ALL_NFTS,
-        payload: collections.getAllNFTs(address),
+        type: ActionTypes.FETCH_COLLECTIONS,
+        payload: collections.fetchCollections(address),
     };
 }

@@ -21,7 +21,9 @@ export function Login() {
     return (
         <section>
             <div hidden={useSelector(app.isLoggedIn)}>
-                <button onClick={() => dispatch(app.login())}>
+                <button
+                    disabled={useSelector(app.getPending)}
+                    onClick={() => dispatch(app.login())}>
                     Login
                 </button>
                 <span hidden={!useSelector(app.getPending)}> Loading ... </span>

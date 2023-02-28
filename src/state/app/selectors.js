@@ -57,3 +57,13 @@ export function getAddress(state) {
     const account = getAccount(state);
     return account && account.addr;
 }
+
+/**
+ * @public
+ * @param {Object} state current state
+ * @return {Object} state
+ */
+export function getSelectedCollectionItem(state) {
+    const app = getState(state);
+    return app && app.selectedCollectionItem;
+}
