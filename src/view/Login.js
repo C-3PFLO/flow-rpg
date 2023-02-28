@@ -1,10 +1,9 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+/* eslint-disable max-len */
 
-import { getCurrentUser, getLoggedIn, hasCollection } from '../state/app/selectors';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { loginAndCheck } from '../state/compound-actions';
-import { logout, initCollection } from '../state/app/actions';
+import app from '../state/app';
 
 /**
  * Get component function
@@ -13,24 +12,28 @@ import { logout, initCollection } from '../state/app/actions';
  */
 export function Login() {
     const dispatch = useDispatch();
+    const address = useSelector(app.getAddress);
+
+    useEffect(() => {
+        dispatch(app.fetchCurrentAccount());
+    }, []);
+
     return (
-        <div>
-            <div>Logged in: {useSelector((state) =>
-                getLoggedIn(state) ? getCurrentUser(state).addr : 'false',
-            )}
+        <section>
+            <div hidden={useSelector(app.isLoggedIn)}>
+                <button
+                    disabled={useSelector(app.getPending)}
+                    onClick={() => dispatch(app.login())}>
+                    Login
+                </button>
+                <span hidden={!useSelector(app.getPending)}> Loading ... </span>
             </div>
-            <button
-                hidden={useSelector(getLoggedIn)}
-                onClick={() => dispatch(loginAndCheck())}>
-                    Login</button>
-            <button
-                hidden={!useSelector(getLoggedIn)}
-                onClick={() => dispatch(logout())}>
-                    Logout</button>
-            <div>Has collection: {useSelector(hasCollection) ? 'YES' : 'NO'}</div>
-            <button
-                onClick={() => dispatch(initCollection())}
-            >Init Collection</button>
-        </div>
+            <div hidden={!useSelector(app.isLoggedIn)}>
+                <button onClick={() => dispatch(app.logout())}>
+                    Logout
+                </button>
+                <span> Account: {address}</span>
+            </div>
+        </section>
     );
 }

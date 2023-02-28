@@ -1,6 +1,9 @@
 import React from 'react';
 
 import { Login } from './Login';
+import { Collection } from './Collection';
+
+import './styles.css';
 
 /**
  * Get component function
@@ -8,7 +11,14 @@ import { Login } from './Login';
  * @return {Function}
  */
 export function App() {
+    // const dispatch = useDispatch();
+
     return (
-        <Login/>
+        <>
+            <h1>flow-rpg</h1>
+            <h3>To RPG your NFT &trade;</h3>
+            <Login/>
+            <Collection/>
+        </>
     );
 }

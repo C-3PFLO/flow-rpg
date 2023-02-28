@@ -33,7 +33,10 @@ describe('cadence/contracts/FlowRPG', () => {
         // get handle on newly created nft
         const [result] = await safeExecuteScript({
             name: 'get_ids',
-            args: [user1],
+            args: [
+                user1,
+                '/public/myExampleNFTCollectionV1',
+            ],
         });
         // cache inputs for tests
         nftID = result[0];

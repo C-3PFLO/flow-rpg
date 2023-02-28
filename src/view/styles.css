@@ -1,0 +1,11 @@
+body {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+section {
+    margin-bottom: 16px;
+}
+
+#collection-browser {
+    height: 500px;
+}

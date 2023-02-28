@@ -13,7 +13,8 @@
         "start:flow-dev": "wait-on tcp:8080 && flow dev",
         "start:flow-dev-wallet": "wait-on tcp:8080 && flow dev-wallet",
         "start:flow": "concurrently \"npm run start:flow-emulator\" \"npm run start:flow-dev\" \"npm run start:flow-dev-wallet\"",
-        "start": "npx webpack serve"
+        "start:web": "npx webpack serve",
+        "start": "concurrently \"npm run start:flow\" \"npm run start:web\""
     },
     "repository": {
         "type": "git",
@@ -53,6 +54,7 @@
     "dependencies": {
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
+        "react-grid-gallery": "^1.0.0",
         "react-redux": "^7.2.6",
         "redux": "^4.0.5",
         "redux-promise-middleware": "^6.1.2",

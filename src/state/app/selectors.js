@@ -1,19 +1,11 @@
 /**
-* Defines the module selectors
-*
-* @module selectors
-*/
-
-import * as utils from '../utils.js';
-
-/**
  * @public
  * @param {Object} state current state
  * @return {Object} state
  */
-export function getApp(state) {
+export function getState(state) {
     return state && state.app ?
-        utils.deepCopy(state.app) : null;
+        Object.assign({}, state.app) : null;
 }
 
 /**
@@ -21,9 +13,9 @@ export function getApp(state) {
  * @param {Object} state current state
  * @return {Object} state
  */
-export function getPersistence(state) {
-    const app = getApp(state);
-    return app && app.persistence ? app.persistence : {};
+export function getInitialized(state) {
+    const app = getState(state);
+    return app ? app.initialized : null;
 }
 
 /**
@@ -31,21 +23,9 @@ export function getPersistence(state) {
  * @param {Object} state current state
  * @return {Object} state
  */
-export function getCurrentUser(state) {
-    const app = getApp(state);
-    return app && app.currentUser ? app.currentUser : {};
-}
-
-/**
- * Get state
- * @public
- * @param {Object} state current state
- * @return {Object} state
- */
-export function getLoggedIn(state) {
-    const persistence = getPersistence(state);
-    const currentUser = getCurrentUser(state);
-    return persistence.initialized && currentUser.loggedIn;
+export function getPending(state) {
+    const app = getState(state);
+    return app ? app.pending : null;
 }
 
 /**
@@ -53,9 +33,9 @@ export function getLoggedIn(state) {
  * @param {Object} state current state
  * @return {Object} state
  */
-export function getCurrentAddress(state) {
-    const currentUser = getCurrentUser(state);
-    return currentUser && currentUser.addr ? currentUser.addr : null;
+export function getAccount(state) {
+    const app = getState(state);
+    return app ? app.account : null;
 }
 
 /**
@@ -63,7 +43,27 @@ export function getCurrentAddress(state) {
  * @param {Object} state current state
  * @return {Object} state
  */
-export function hasCollection(state) {
-    const app = getApp(state);
-    return app ? app.hasCollection : null;
+export function isLoggedIn(state) {
+    const account = getAccount(state);
+    return account && account.loggedIn;
+}
+
+/**
+ * @public
+ * @param {Object} state current state
+ * @return {Object} state
+ */
+export function getAddress(state) {
+    const account = getAccount(state);
+    return account && account.addr;
+}
+
+/**
+ * @public
+ * @param {Object} state current state
+ * @return {Object} state
+ */
+export function getSelectedCollectionItem(state) {
+    const app = getState(state);
+    return app && app.selectedCollectionItem;
 }

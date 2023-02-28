@@ -1,19 +1,12 @@
 /**
-* Defines the module action types
-*
-* @module ActionTypes
-*/
-
-/**
 * ActionTypes
 * @const {String}
 */
 const ActionTypes = {
-    INIT_APP: 'INIT_APP',
+    GET_CURRENT_ACCOUNT: 'GET_CURRENT_ACCOUNT',
     LOGIN: 'LOGIN',
     LOGOUT: 'LOGOUT',
-    CHECK_COLLECTION: 'CHECK_COLLECTION',
-    INIT_COLLECTION: 'INIT_COLLECTION',
+    SET_SELECTED_COLLECTION_ITEM: 'SET_SELECTED_COLLECTION_ITEM',
 };
 
 export default ActionTypes;

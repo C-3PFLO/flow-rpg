@@ -9,19 +9,12 @@ import fclConfig from './fcl.config';
 
 import { App } from './view/App';
 
-import { initializeApp } from './state/compound-actions';
-
 fcl.config(fclConfig);
-
-const rootElement = document.getElementById('root');
 store.createStore();
-
-// start by checking if already logged in
-store.getStore().dispatch(initializeApp());
 
 ReactDOM.render(
     <Provider store={store.getStore()}>
         <App />
     </Provider>,
-    rootElement,
+    document.getElementById('root'),
 );

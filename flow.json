@@ -1,7 +1,10 @@
 {
 	"contracts": {
 		"FlowRPG": "cadence/contracts/FlowRPG.cdc",
+		"FungibleToken": "cadence/contracts/FungibleToken.cdc",
+		"MetadataViews": "cadence/contracts/MetadataViews.cdc",
 		"MyExampleNFT": "cadence/contracts/MyExampleNFT.cdc",
+		"MyOtherExampleNFT": "cadence/contracts/MyOtherExampleNFT.cdc",
 		"NonFungibleToken": "cadence/contracts/NonFungibleToken.cdc"
 	},
 	"networks": {
@@ -13,7 +16,7 @@
 	"accounts": {
 		"default": {
 			"address": "f3fcd2c1a78f5eee",
-			"key": "fed9730c525f2742544ee7a83a25456cd2c373ee1c432f26686ddf6356cc7472"
+			"key": "a806f9ca92fdda921562404a3d4f28cf7d65ccc538af84698768dfcc3faf6629"
 		},
 		"emulator-account": {
 			"address": "f8d6e0586b0a20c7",
@@ -24,10 +27,12 @@
 		"emulator": {
 			"default": [
 				"FlowRPG",
+				"FungibleToken",
+				"MetadataViews",
 				"MyExampleNFT",
+				"MyOtherExampleNFT",
 				"NonFungibleToken"
 			]
 		}
 	}
 }
- 

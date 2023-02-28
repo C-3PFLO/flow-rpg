@@ -2,9 +2,9 @@ import FlowRPG from "../contracts/FlowRPG.cdc"
 import NonFungibleToken from "../contracts/NonFungibleToken.cdc"
 
 pub fun main(
-        address: Address,
-        collectionPublicPath: PublicPath,
-        id: UInt64
+    address: Address,
+    collectionPublicPath: PublicPath,
+    id: UInt64
     ): AnyStruct {
     let nft = getAccount(address)
         .getCapability(collectionPublicPath)
