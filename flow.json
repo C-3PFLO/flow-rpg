@@ -4,6 +4,7 @@
 		"FungibleToken": "cadence/contracts/FungibleToken.cdc",
 		"MetadataViews": "cadence/contracts/MetadataViews.cdc",
 		"MyExampleNFT": "cadence/contracts/MyExampleNFT.cdc",
+		"MyOtherExampleNFT": "cadence/contracts/MyOtherExampleNFT.cdc",
 		"NonFungibleToken": "cadence/contracts/NonFungibleToken.cdc"
 	},
 	"networks": {
@@ -15,7 +16,7 @@
 	"accounts": {
 		"default": {
 			"address": "f3fcd2c1a78f5eee",
-			"key": "7784fe999faecc691f45cf751a68d741bc6226305e496daa3984206f5a9048de"
+			"key": "0c3931c36bd2578c20d6bdbfe89d40fb5b2f8c4bbf29bcd8f833f85bfc3bc836"
 		},
 		"emulator-account": {
 			"address": "f8d6e0586b0a20c7",
@@ -29,6 +30,7 @@
 				"FungibleToken",
 				"MetadataViews",
 				"MyExampleNFT",
+				"MyOtherExampleNFT",
 				"NonFungibleToken"
 			]
 		}

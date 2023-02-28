@@ -3,8 +3,7 @@
 * @const {String}
 */
 const ActionTypes = {
-    GET_CURRENT_ACCOUNT: 'GET_CURRENT_ACCOUNT',
-    LOGIN: 'LOGIN',
+    GET_ALL_NFTS: 'GET_ALL_NFTS',
     LOGOUT: 'LOGOUT',
 };
 

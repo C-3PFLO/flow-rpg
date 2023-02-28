@@ -5,7 +5,7 @@ const initialState = {
     initialized: false,
     pending: false,
     error: null,
-    account: null,
+    nfts: null,
 };
 
 /**
@@ -17,27 +17,25 @@ const initialState = {
  */
 export function reduce(state = initialState, action) {
     switch (action.type) {
-    case ActionTypes.FETCH_CURRENT_ACCOUNT + AsyncStatus.PENDING:
-    case ActionTypes.LOGIN + AsyncStatus.PENDING:
+    case ActionTypes.GET_ALL_NFTS + AsyncStatus.PENDING:
         return {
             ...state,
             pending: true,
         };
-    case ActionTypes.FETCH_CURRENT_ACCOUNT + AsyncStatus.SUCCESS:
-    case ActionTypes.LOGIN + AsyncStatus.SUCCESS:
+    case ActionTypes.GET_ALL_NFTS + AsyncStatus.SUCCESS:
         return {
             ...state,
             pending: false,
             initialized: true,
-            account: action.payload,
+            nfts: action.payload,
         };
-    case ActionTypes.FETCH_CURRENT_ACCOUNT + AsyncStatus.FAILURE:
-    case ActionTypes.LOGIN + AsyncStatus.FAILURE:
+    case ActionTypes.GET_ALL_NFTS + AsyncStatus.FAILURE:
         return {
             ...state,
             pending: false,
             error: action.payload,
         };
+    // dispatched by app, but relevant here
     case ActionTypes.LOGOUT:
         return initialState;
     default:

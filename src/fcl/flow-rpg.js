@@ -110,29 +110,37 @@ export function attachRPGCharacter(
 
 /**
 * @public
+* @param {String} address
+* @param {String} collectionPublicPath
+* @param {Integer} itemID
 * @return {Promise}
 */
-export function initCollection() {
+export function getRPGCharacter(address, collectionPublicPath, itemID) {
     const cadence = `
-        import MyExampleNFT from 0xAdmin
+        import FlowRPG from 0xAdmin
         import NonFungibleToken from 0xAdmin
         
-        transaction() {
-            prepare(signer: AuthAccount) {
-                signer.save(
-                    <- MyExampleNFT.createEmptyCollection(),
-                    to: MyExampleNFT.CollectionStoragePath
-                )
-                signer.link<&MyExampleNFT.Collection{NonFungibleToken.CollectionPublic,
-                                                    NonFungibleToken.Receiver,
-                                                    MyExampleNFT.CollectionPublic}>(
-                    MyExampleNFT.CollectionPublicPath,
-                    target: MyExampleNFT.CollectionStoragePath
-                )
-            }
+        pub fun main(
+                address: Address,
+                collectionPublicPath: PublicPath,
+                itemID: UInt64
+            ): AnyStruct {
+            let account = getAccount(address)
+            let capability = account.getCapability(collectionPublicPath)
+            let publicCollection = capability.borrow<&{NonFungibleToken.CollectionPublic}>()!
+            let nft = publicCollection.borrowNFT(id: itemID)
+            let rpg = nft[FlowRPG.RPGCharacter]!
+            return rpg.resolveView(
+                Type<FlowRPG.RPGCharacterView>()
+            )
         }
     `;
-    return fcl.mutate({ cadence }).then((id) => {
-        return fcl.tx(id).onceSealed();
+    const args = (arg, t) => [
+        arg(address, t.Address),
+        arg({ domain: 'public', identifier: collectionPublicPath }, t.Path),
+        arg(itemID, t.UInt64),
+    ];
+    return fcl.query({ cadence, args }).then((response) => {
+        return Promise.resolve(response === 0 ? null : response);
     });
 }
