@@ -38,7 +38,7 @@ export function Collection() {
                 data: {
                     storagePath: collection.path.identifier,
                     // TODO: get publicPath when loading collection
-                    // HACK: hardcode for now
+                    // HACK: hardcode for now to be the same base as storage
                     publicPath: collection.path.identifier.split('/')[0],
                 },
             };

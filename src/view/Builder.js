@@ -88,6 +88,7 @@ export function Builder() {
                                 </div>
                             </div>
                             <h4>Attributes</h4>
+                            {/* TODO: refactor this into a single element repeated for an array of attributes */}
                             <div className='character-attributes'>
                                 <div className='character-attribute'>
                                     <label htmlFor='strength' className='character-attribute-label'>STR</label>
