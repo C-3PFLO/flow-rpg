@@ -37,6 +37,7 @@ export function Character() {
                 </div>
                 <h4>Attributes</h4>
                 <div className='character-attributes'>
+                    {/* TODO: refactor this into a single element repeated for an array of attributes */}
                     <div className='character-attribute'>
                         <div className='character-attribute-value strength'>{useSelector((state) => rpg.getModifierForAttribute(state, 'strength'))}</div>
                         <span className='character-attribute-label'>STR</span>

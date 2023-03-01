@@ -1,14 +1,19 @@
 import NonFungibleToken from "./NonFungibleToken.cdc"
 import MetadataViews from "./MetadataViews.cdc"
 
+// This contract implements an attachment to add RPG meta-data
+// to any NonFungibleToken
+// 
+// Intended use is provided in cadence/transactions/attach_rpg_character.cdc
+// 
 pub contract FlowRPG {
 
     pub var totalSupply: UInt64
-    pub var classes: {String: Class}
     pub let GameKeeperStoragePath: StoragePath
+    pub var classes: {String: Class}
 
     pub event ContractInitialized()
-    pub event Minted() // TODO
+    pub event Minted() // TODO: add relevant meta data
 
     pub enum Attribute: UInt64 {
         pub case strength
@@ -25,6 +30,10 @@ pub contract FlowRPG {
         pub case spell
     }
 
+    // calculate "point buy" total for attribute point initialization
+    // each point value has a "cost"
+    // https://www.dndbeyond.com/sources/basic-rules/step-by-step-characters#3DetermineAbilityScores
+    // 
     pub fun calculatePointBuy(
         strength: UInt64,
         dexterity: UInt64,
@@ -44,11 +53,20 @@ pub contract FlowRPG {
             pointCost[charisma]!
     }
 
+    // classes are stored in a contract dictionary and each
+    // FlowRPG.RPGCharacter stores a classID that reference
+    // a given class
+    // 
+    // thie method provides a lookup
+    // 
     pub fun getClassFromID(classID: String): FlowRPG.Class {
         return self.classes[classID]!
     }
 
-    // base scores excluding any modifiers
+    // each FlowRPG.RPGCharacter has a set of core attribute points
+    // these represent the base values before any modifiers are
+    // applied (ex: based on other character features)
+    // 
     pub struct AttributePoints {
         pub var strength: UInt64
         pub var dexterity: UInt64
@@ -65,7 +83,7 @@ pub contract FlowRPG {
             charisma: UInt64,
             ) {
             // attributes must follow point-buy rules during initialization
-            // https://www.dndbeyond.com/sources/basic-rules/step-by-step-characters#3DetermineAbilityScores
+            // 8 <= attribute <= 15 && total score <= 27
             pre {
                 // <= 15
                 strength <= 15 : "exceeds maximum initial value"
@@ -100,6 +118,7 @@ pub contract FlowRPG {
         }
     }
 
+    // each FlowRPG.RPGCharacter selects one FlowRPG.Class
     pub struct Class {
         pub let name: String
         pub let description: String
@@ -124,6 +143,8 @@ pub contract FlowRPG {
         }
     }
 
+    // public interface to get any property
+    // 
     pub resource interface Public {
         pub var name: String
         pub let classID: String
@@ -139,6 +160,8 @@ pub contract FlowRPG {
         pub fun getHitPoints(): Int64
     }
 
+    // private interface to modify specific properties
+    // after initial mint
     pub resource interface Private {
         pub fun setName(name: String)
     }
@@ -224,7 +247,10 @@ pub contract FlowRPG {
                 case Type<MetadataViews.Display>():
                     return MetadataViews.Display(
                         name: self.getName(),
-                        // TODO: use class description as a placeholder
+                        // TODO: enrich RPGCharacter meta data with additional
+                        // properties like background, descriotion, etc.
+                        // for now just relay the class descriotion as the
+                        // character descriotion, as a placeholder
                         description: class == nil ? "" : class.description,
                         // TODO: get from base when provided
                         thumbnail: MetadataViews.HTTPFile(
@@ -245,7 +271,14 @@ pub contract FlowRPG {
             }
         }
 
-        // Admin only
+        // in many games, there are character meta-data that are meant to
+        // be updated by admins instead of users, ex: their health or
+        // hit points as they take damage or heal.
+        // 
+        // FlowRPG.RPGCharacter protects the hitPoints propery by setting
+        // access(contract) and only exposing this function in the
+        // GameKeeper resource initialized below
+        // 
         access(contract) fun updateHitPoints(delta: Int64) {
             self.hitPoints = self.hitPoints + delta
         }
@@ -275,6 +308,7 @@ pub contract FlowRPG {
     // 
     // if this were to be gated or monetized, that would have to happen
     // within this public function
+    // 
     pub fun attachRPGCharacter(
         nft: @{NonFungibleToken.INFT},
         name: String,
@@ -282,7 +316,10 @@ pub contract FlowRPG {
         classID: String,
         attributes: AttributePoints
         ): @{NonFungibleToken.INFT} {
-        emit Minted() // TODO
+        emit Minted()
+
+        // create the RPGCharacter, move the original NFT to the
+        // attach call and return the resulting nft with attachment
         return <- attach RPGCharacter(
             name: name,
             alignment: alignment,
@@ -291,12 +328,20 @@ pub contract FlowRPG {
         ) to <- nft
     }
 
+    // the GameKeeper is an admin resource that controls meta-data users
+    // are not typically expected/allowed to control, for example the
+    // hitPoints property
+    // 
+    // in the future, there will hopefully be many different games developped
+    // by many different parties.  this resource includes the ability to 
+    // mint additional GameKeeper resources and deposit to trusted third
+    // parties.  in the future maybe this will be split from the GameKeeper
+    // resource itself, or specialized for certain games.
+    // 
     pub resource GameKeeper {
-        // TODO: test that this is only accessible by GameKeeper
         pub fun updateHitPoints(char: &FlowRPG.RPGCharacter, delta: Int64) {
             char.updateHitPoints(delta: delta)
         }
-        // TODO: test
         pub fun addClass(
             classID: String,
             name: String,
@@ -317,6 +362,9 @@ pub contract FlowRPG {
                 initialHitPoints: initialHitPoints
             )
         }
+        // TODO: refactor into a separate admin resource - not all parites
+        // trusted with maintaining a game should be trusted with the ability
+        // to add more trusted parites
         pub fun createGameKeeper(): @GameKeeper {
             return <- create GameKeeper()
         }
@@ -332,6 +380,8 @@ pub contract FlowRPG {
         self.classes = {
             "wizard-v1": FlowRPG.Class(
                 name: "Wizard",
+                // these descriptions are from http://dnd5e.wikidot.com/#toc19
+                // need to confirm licensing and whether or not these are covered by SRD 5.1
                 description: "Wizards are supreme magic-users, defined and united as a class by the spells they cast. Drawing on the subtle weave of magic that permeates the cosmos, wizards cast spells of explosive fire, arcing lightning, subtle deception, brute-force mind control, and much more.",
                 bonuses: [Attribute.intelligence, Attribute.wisdom],
                 savingThrows: [Attribute.intelligence],
