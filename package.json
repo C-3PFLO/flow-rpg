@@ -14,7 +14,9 @@
         "start:flow-dev-wallet": "wait-on tcp:8080 && flow dev-wallet",
         "start:flow": "concurrently \"npm run start:flow-emulator\" \"npm run start:flow-dev\" \"npm run start:flow-dev-wallet\"",
         "start:web": "npx webpack serve",
-        "start": "concurrently \"npm run start:flow\" \"npm run start:web\""
+        "start": "concurrently \"npm run start:flow\" \"npm run start:web\"",
+        "hydrate": "./hydrate-store.sh",
+        "hydrate:more": "./hydrate-store-more.sh"
     },
     "repository": {
         "type": "git",
@@ -52,9 +54,11 @@
         "webpack-dev-server": "^4.7.3"
     },
     "dependencies": {
+        "@onflow/fcl": "^1.3.2",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
         "react-grid-gallery": "^1.0.0",
+        "react-modal": "^3.16.1",
         "react-redux": "^7.2.6",
         "redux": "^4.0.5",
         "redux-promise-middleware": "^6.1.2",

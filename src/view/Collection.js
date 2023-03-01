@@ -48,7 +48,7 @@ export function Collection() {
     const images = useSelector(collections.getCollections).map(mapToDisplay).flat();
 
     return (
-        <section id="collection-browser" hidden={!useSelector(app.isLoggedIn)}>
+        <section hidden={!useSelector(app.isLoggedIn)}>
             <h3>Collection</h3>
             <section>
                 <button
@@ -68,22 +68,9 @@ export function Collection() {
             <section hidden={!selectedCollectionItem}>
                 <button
                     disabled={useSelector(rpg.getPending)}
-                    onClick={() => dispatch(rpg.attachRPGCharacterAndFetch(
-                        address,
-                        selectedCollectionItem.data.storagePath,
-                        selectedCollectionItem.data.publicPath,
-                        selectedCollectionItem.id,
-                        'C-3PFLO',
-                        'good-lawful',
-                        'sorcerer-v1',
-                        '8', '11', '8', '15', '15', '12',
-                    ))}>
+                    onClick={() => dispatch(app.toggleBuilder())}>
                     Attach RPG Character
                 </button>
-            </section>
-            <section hidden={!useSelector(rpg.getInitialized)}>
-                <h3>Flow RPG Character</h3>
-                <span>{useSelector((state) => JSON.stringify(rpg.getCharacter(state), null, 2))}</span>
             </section>
         </section>
     );

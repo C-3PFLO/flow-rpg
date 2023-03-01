@@ -45,3 +45,13 @@ export function setSelectedCollectionItem(item) {
         payload: item,
     };
 }
+
+/**
+ * @public
+ * @return {Object} action
+ */
+export function toggleBuilder() {
+    return {
+        type: ActionTypes.TOGGLE_BUILDER,
+    };
+}

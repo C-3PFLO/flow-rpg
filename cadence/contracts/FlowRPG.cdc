@@ -169,7 +169,9 @@ pub contract FlowRPG {
         }
     }
 
-    pub attachment RPGCharacter for NonFungibleToken.INFT: Public, Private, MetadataViews.Resolver {
+    pub attachment RPGCharacter for NonFungibleToken.INFT: Public,
+                                                           Private,
+                                                           MetadataViews.Resolver {
         pub var name: String
         pub let alignment: String
         pub let classID: String
@@ -330,7 +332,7 @@ pub contract FlowRPG {
         self.classes = {
             "wizard-v1": FlowRPG.Class(
                 name: "Wizard",
-                description: "... to do ...",
+                description: "Wizards are supreme magic-users, defined and united as a class by the spells they cast. Drawing on the subtle weave of magic that permeates the cosmos, wizards cast spells of explosive fire, arcing lightning, subtle deception, brute-force mind control, and much more.",
                 bonuses: [Attribute.intelligence, Attribute.wisdom],
                 savingThrows: [Attribute.intelligence],
                 attackAbilities: [AttackAbility.spell],
@@ -338,7 +340,7 @@ pub contract FlowRPG {
             ),
             "sorcerer-v1": FlowRPG.Class(
                 name: "Sorcerer",
-                description: "... to do ...",
+                description: "Sorcerers carry a magical birthright conferred upon them by an exotic bloodline, some otherworldly influence, or exposure to unknown cosmic forces. No one chooses sorcery; the power chooses the sorcerer.",
                 bonuses: [Attribute.charisma, Attribute.intelligence],
                 savingThrows: [Attribute.charisma],
                 attackAbilities: [AttackAbility.spell],
@@ -346,7 +348,7 @@ pub contract FlowRPG {
             ),
             "barbarian-v1": FlowRPG.Class(
                 name: "Barbarian",
-                description: "... to do ...",
+                description: "For some, their rage springs from a communion with fierce animal spirits. Others draw from a roiling reservoir of anger at a world full of pain. For every barbarian, rage is a power that fuels not just a battle frenzy but also uncanny reflexes, resilience, and feats of strength.",
                 bonuses: [Attribute.strength, Attribute.constitution],
                 savingThrows: [Attribute.strength],
                 attackAbilities: [AttackAbility.melee],
@@ -354,7 +356,7 @@ pub contract FlowRPG {
             ),
             "ranger-v1": FlowRPG.Class(
                 name: "Ranger",
-                description: "... to do ...",
+                description: "Far from the bustle of cities and towns, past the hedges that shelter the most distant farms from the terrors of the wild, amid the dense-packed trees of trackless forests and across wide and empty plains, rangers keep their unending watch.",
                 bonuses: [Attribute.dexterity, Attribute.constitution],
                 savingThrows: [Attribute.dexterity],
                 attackAbilities: [AttackAbility.ranged],
@@ -362,7 +364,7 @@ pub contract FlowRPG {
             ),
             "rogue-v1": FlowRPG.Class(
                 name: "Rogue",
-                description: "... to do ...",
+                description: "Rogues rely on skill, stealth, and their foes' vulnerabilities to get the upper hand in any situation. They have a knack for finding the solution to just about any problem, demonstrating a resourcefulness and versatility that is the cornerstone of any successful adventuring party.",
                 bonuses: [Attribute.dexterity, Attribute.strength],
                 savingThrows: [Attribute.dexterity],
                 attackAbilities: [AttackAbility.melee, AttackAbility.ranged],
