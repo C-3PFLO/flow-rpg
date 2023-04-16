@@ -192,6 +192,11 @@ pub contract FlowRPG {
         }
     }
 
+    // Flow.RPGCharacter is an attachment for any NonFuncgibleToken
+    // 
+    // the attachment feature enables permissionless composibility
+    // with any project by mixing in this new meta data and capability
+    // 
     pub attachment RPGCharacter for NonFungibleToken.INFT: Public,
                                                            Private,
                                                            MetadataViews.Resolver {
