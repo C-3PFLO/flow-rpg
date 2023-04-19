@@ -54,6 +54,8 @@ transaction(
     }
 
     execute {
+        // Add mixin to nft
+        let mixinNft <- attach FlowRPG.RPGMixin() to <- self.nft
         // TODO: pass a struct as an argument instead of individual values
         // that need to be reconstructed into a struct here
         let attributes = FlowRPG.AttributePoints(
@@ -64,20 +66,20 @@ transaction(
             wisdom: wisdom,
             charisma: charisma,
         )
-        // delegate to FlowRPG.attachRPGCharacter to create the
-        // FlowRPG.RPGCharacter and attach it to the nft
-        let rpgNFT <- FlowRPG.attachRPGCharacter(
-            nft: <- self.nft,
+        // create RPGCharacter
+        let rpgCharacter <- FlowRPG.createRpgCharacter(
             name: name,
             alignment: alignment,
             classID: classID,
             attributes: attributes
-        ) as! @NonFungibleToken.NFT
+        )
+        // add to nft
+        mixinNft[FlowRPG.RPGMixin]!.addCharacter(rpgCharacter: <- rpgCharacter)
         // deposit the modified nft back into the target collection
         // using the cached public Receiver capability
         self.receiverCapability
             .borrow()!
-            .deposit(token: <- rpgNFT)
+            .deposit(token: <- (mixinNft as! @NonFungibleToken.NFT))
     }
 }
  

@@ -31,63 +31,75 @@ export function attachRPGCharacter(
     wisdom,
     charisma ) {
     const cadence = `
-        import FlowRPG from 0xAdmin
-        import NonFungibleToken from 0xAdmin
-        
-        transaction(
-            collectionStoragePath: StoragePath,
-            collectionPublicPath: PublicPath,
-            itemID: UInt64,
-            name: String,
-            alignment: String,
-            classID: String,
-            strength: UInt64,
-            dexterity: UInt64,
-            constitution: UInt64,
-            intelligence: UInt64,
-            wisdom: UInt64,
-            charisma: UInt64
-        ) {
-        
-            let receiverCapability: Capability<&{NonFungibleToken.Receiver}>
-            var nft: @{NonFungibleToken.INFT}
-        
-            prepare(acct: AuthAccount) {
-                // store retriever to deposit nft after attachment
-                self.receiverCapability = acct.getCapability<&AnyResource{NonFungibleToken.Receiver}>(collectionPublicPath)
-                assert (
-                    self.receiverCapability.check(),
-                    message: "Could not access Receiver Capability at the given path for this account!"
-                )
-                // get nft from provider
-                let providerReference =
-                    acct.borrow<&{NonFungibleToken.Provider}>(
-                        from: collectionStoragePath
-                    )!
-                self.nft <- providerReference.withdraw(withdrawID: itemID)
-            }
-        
-            execute {
-                let attributes = FlowRPG.AttributePoints(
-                    strength: strength,
-                    dexterity: dexterity,
-                    constitution: constitution,
-                    intelligence: intelligence,
-                    wisdom: wisdom,
-                    charisma: charisma,
-                )
-                let rpgNFT <- FlowRPG.attachRPGCharacter(
-                    nft: <- self.nft,
-                    name: name,
-                    alignment: alignment,
-                    classID: classID,
-                    attributes: attributes
-                ) as! @NonFungibleToken.NFT
-                self.receiverCapability
-                    .borrow()!
-                    .deposit(token: <- rpgNFT)
-            }
+    import FlowRPG from 0xAdmin
+    import NonFungibleToken from 0xAdmin
+
+    transaction(
+        collectionStoragePath: StoragePath,
+        collectionPublicPath: PublicPath,
+        itemID: UInt64,
+        name: String,
+        alignment: String,
+        classID: String,
+        strength: UInt64,
+        dexterity: UInt64,
+        constitution: UInt64,
+        intelligence: UInt64,
+        wisdom: UInt64,
+        charisma: UInt64
+    ) {
+    
+        let receiverCapability: Capability<&{NonFungibleToken.Receiver}>
+        var nft: @{NonFungibleToken.INFT}
+    
+        prepare(acct: AuthAccount) {
+            // store the public path receiver to later deposit the nft back after attaching
+            // assert if that capability is invalid, to fail befoew withdrawing and attaching
+            // 
+            self.receiverCapability = acct.getCapability<&AnyResource{NonFungibleToken.Receiver}>(collectionPublicPath)
+            assert (
+                self.receiverCapability.check(),
+                message: "Could not access Receiver Capability at the given path for this account!"
+            )
+            // get the nft from storage path provider, but then only onld on to that one nft
+            // to limit what is exposed in the execute phase
+            //
+            let providerReference =
+                acct.borrow<&{NonFungibleToken.Provider}>(
+                    from: collectionStoragePath
+                )!
+            self.nft <- providerReference.withdraw(withdrawID: itemID)
         }
+    
+        execute {
+            // Add mixin to nft
+            let mixinNft <- attach FlowRPG.RPGMixin() to <- self.nft
+            // TODO: pass a struct as an argument instead of individual values
+            // that need to be reconstructed into a struct here
+            let attributes = FlowRPG.AttributePoints(
+                strength: strength,
+                dexterity: dexterity,
+                constitution: constitution,
+                intelligence: intelligence,
+                wisdom: wisdom,
+                charisma: charisma,
+            )
+            // create RPGCharacter
+            let rpgCharacter <- FlowRPG.createRpgCharacter(
+                name: name,
+                alignment: alignment,
+                classID: classID,
+                attributes: attributes
+            )
+            // add to nft
+            mixinNft[FlowRPG.RPGMixin]!.addCharacter(rpgCharacter: <- rpgCharacter)
+            // deposit the modified nft back into the target collection
+            // using the cached public Receiver capability
+            self.receiverCapability
+                .borrow()!
+                .deposit(token: <- (mixinNft as! @NonFungibleToken.NFT))
+        }
+    }
     `;
     const args = (arg, t) => [
         arg({ domain: 'storage', identifier: collectionStoragePath }, t.Path),
@@ -129,7 +141,7 @@ export function fetchRPGCharacter(address, collectionPublicPath, itemID) {
             let capability = account.getCapability(collectionPublicPath)
             let publicCollection = capability.borrow<&{NonFungibleToken.CollectionPublic}>()!
             let nft = publicCollection.borrowNFT(id: itemID)
-            let rpg = nft[FlowRPG.RPGCharacter]!
+            let rpg = nft[FlowRPG.RPGMixin]!.borrowCharacter()
             return rpg.resolveView(
                 Type<FlowRPG.RPGCharacterView>()
             )

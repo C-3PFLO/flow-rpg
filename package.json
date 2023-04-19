@@ -1,6 +1,6 @@
 {
     "name": "flow-rpg",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "RPG your NFT",
     "main": "index.js",
     "scripts": {
