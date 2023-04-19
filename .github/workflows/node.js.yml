@@ -32,13 +32,8 @@ jobs:
     # END HACK
 
     - run: npm ci
-    
-    # Build
     - run: npm run build
-
-    # Validate
     - run: npm run check
-
     # HACK: tests passing locally but failing on github node
     # something may be missing from repo, but for now just disable
-    # - run: npm test
+    - run: npm test
