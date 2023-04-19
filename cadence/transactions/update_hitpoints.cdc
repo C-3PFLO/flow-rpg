@@ -22,7 +22,7 @@ transaction(
             .getCapability<&AnyResource{NonFungibleToken.CollectionPublic}>(collectionPublicPath)
             .borrow()!
             .borrowNFT(id: itemID)
-        self.rpg = nft[FlowRPG.RPGCharacter]!
+        self.rpg = nft[FlowRPG.RPGMixin]!.borrowCharacter()
     }
 
     execute {

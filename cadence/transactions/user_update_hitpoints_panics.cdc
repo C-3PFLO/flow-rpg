@@ -14,7 +14,7 @@ transaction(
             from: collectionStoragePath
         )!
         let nft = collection.borrowNFT(id: itemID)
-        self.rpg = nft[FlowRPG.RPGCharacter]!
+        self.rpg = nft[FlowRPG.RPGMixin]!.borrowCharacter()
     }
 
     execute {

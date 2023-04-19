@@ -192,14 +192,9 @@ pub contract FlowRPG {
         }
     }
 
-    // Flow.RPGCharacter is an attachment for any NonFuncgibleToken
-    // 
-    // the attachment feature enables permissionless composibility
-    // with any project by mixing in this new meta data and capability
-    // 
-    pub attachment RPGCharacter for NonFungibleToken.INFT: Public,
-                                                           Private,
-                                                           MetadataViews.Resolver {
+    pub resource RPGCharacter: Public,
+                               Private,
+                               MetadataViews.Resolver  {
         pub var name: String
         pub let alignment: String
         pub let classID: String
@@ -239,7 +234,6 @@ pub contract FlowRPG {
         // Resolver
         pub fun getViews() : [Type] {
             var views : [Type]=[]
-            // TODO: relay base views
             views.append(Type<MetadataViews.Display>())
             views.append(Type<FlowRPG.RPGCharacterView>())
             // TODO: additional views
@@ -257,7 +251,7 @@ pub contract FlowRPG {
                         // for now just relay the class descriotion as the
                         // character descriotion, as a placeholder
                         description: class == nil ? "" : class.description,
-                        // TODO: get from base when provided
+                        // TODO
                         thumbnail: MetadataViews.HTTPFile(
                             url: ""
                         )
@@ -306,31 +300,46 @@ pub contract FlowRPG {
         }
     }
 
-    // only the owner of an nft can 'attach' something to it
-    // and an attachment must be created in the statement where it is attached
-    // thus we cannot use something like a minter pattern, where
-    // only an admin user can mint an RPGCharacter and send it to users
-    // 
-    // if this were to be gated or monetized, that would have to happen
-    // within this public function
-    // 
-    pub fun attachRPGCharacter(
-        nft: @{NonFungibleToken.INFT},
+    // TODO: Decide how to gate RPGCharacters, ex: using a Minter pattern
+    pub fun createRpgCharacter(
         name: String,
         alignment: String,
         classID: String,
-        attributes: AttributePoints
-        ): @{NonFungibleToken.INFT} {
-        emit Minted()
-
-        // create the RPGCharacter, move the original NFT to the
-        // attach call and return the resulting nft with attachment
-        return <- attach RPGCharacter(
+        attributes: FlowRPG.AttributePoints
+    ): @FlowRPG.RPGCharacter {
+        return <- create FlowRPG.RPGCharacter(
             name: name,
             alignment: alignment,
             classID: classID,
             attributes: attributes
-        ) to <- nft
+        )
+    }
+
+    // Flow.RPGCharacter is an attachment for any NonFuncgibleToken
+    // 
+    // the attachment feature enables permissionless composibility
+    // with any project by mixing in this new meta data and capability
+    // 
+    pub attachment RPGMixin for NonFungibleToken.INFT {
+        pub var rpgCharacter: @FlowRPG.RPGCharacter?
+        init() {
+            self.rpgCharacter <- nil;
+        }
+        pub fun borrowCharacter(): &FlowRPG.RPGCharacter {
+            return (&self.rpgCharacter as &FlowRPG.RPGCharacter?)!
+        }
+        pub fun addCharacter(rpgCharacter: @FlowRPG.RPGCharacter) {
+            self.rpgCharacter <-! rpgCharacter
+        }
+        pub fun removeCharacter(): @FlowRPG.RPGCharacter? {
+            let rpgCharacter <- self.rpgCharacter <- nil
+            return <- rpgCharacter
+        }
+        destroy() {
+            pre {
+                self.rpgCharacter != nil: "rpgCharacter must be removed before destroying attachment"
+            }
+        }
     }
 
     // the GameKeeper is an admin resource that controls meta-data users

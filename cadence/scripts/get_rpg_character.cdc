@@ -10,7 +10,7 @@ pub fun main(
         .getCapability(collectionPublicPath)
         .borrow<&{NonFungibleToken.CollectionPublic}>()!
         .borrowNFT(id: id)
-    let rpg = nft[FlowRPG.RPGCharacter]!
+    let rpg = nft[FlowRPG.RPGMixin]!.borrowCharacter()
     return rpg.resolveView(
         Type<FlowRPG.RPGCharacterView>()
     )
