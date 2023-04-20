@@ -42,16 +42,16 @@ describe('cadence/scripts/get-all-nfts', () => {
             {
                 nfts: [
                     {
-                        uuid: '33',
-                        id: '33',
-                        name: 'my-new-nft',
-                        imageURL: 'http://url-to-somewhere/my-new-nft.png',
+                        uuid: '35',
+                        id: '35',
+                        name: 'my-other-nft',
+                        imageURL: 'http://url-to-somewhere/my-other-nft.png',
                     },
                     {
                         uuid: '34',
                         id: '34',
-                        name: 'my-other-nft',
-                        imageURL: 'http://url-to-somewhere/my-other-nft.png',
+                        name: 'my-new-nft',
+                        imageURL: 'http://url-to-somewhere/my-new-nft.png',
                     },
                 ],
                 path: {
