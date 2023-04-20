@@ -22,6 +22,7 @@ beforeEach(async () => {
     await safeDeployContractByName({ to: admin, name: 'FlowRPG' });
     await safeDeployContractByName({ to: admin, name: 'MyExampleNFT' });
     await safeDeployContractByName({ to: admin, name: 'MyOtherExampleNFT' });
+    await safeDeployContractByName({ to: admin, name: 'RpgTemplates' });
 });
 
 // Stop emulator, so it could be restarted
